@@ -19,14 +19,13 @@ public class CompiladorController {
     private Scene escena;
     private AnimationTimer tiempo;
     private ArrayList<String> comandos = new ArrayList<>();
-
+    private ArrayList<Figura> figuras = new ArrayList<>();
 
     // coordenadas y dimensiones
     private int x = 0;
     private int y = 0;
     private int ancho = 0;
     private int alto = 0;
-    private int radio = 0;
 
     // banderas
     boolean fondoActivo = false;
@@ -90,6 +89,41 @@ public class CompiladorController {
         abstract void dibujar(GraphicsContext g);
     }
 
+    class Rectangulo extends Figura {
+        int x, y, ancho, alto;
+
+        Rectangulo(String id, Color color, int x, int y, int ancho, int alto) {
+            super(id, color);
+            this.x = x;
+            this.y = y;
+            this.ancho = ancho;
+            this.alto = alto;
+        }
+
+        @Override
+        void dibujar(GraphicsContext g) {
+            g.setFill(color);
+            g.fillRect(x, y, ancho, alto);
+        }
+    }
+
+    class Circulo extends Figura {
+        int x, y, ancho, alto;
+
+        Circulo(String id, Color color, int x, int y, int ancho, int alto) {
+            super(id, color);
+            this.x = x;
+            this.y = y;
+            this.ancho = ancho;
+            this.alto = alto;
+        }
+
+        @Override
+        void dibujar(GraphicsContext g) {
+            g.setFill(color);
+            g.fillOval(x - ancho / 2.0, y - alto / 2.0, ancho, alto);
+        }
+    }
 
     private void pintar() {
         if (fondoActivo) {
@@ -99,6 +133,7 @@ public class CompiladorController {
         }
         if (limpiar) {
             graficos.clearRect(0, 0, 400, 400);
+            figuras.clear(); // limpiar también los objetos creados
             limpiar = false;
         }
         if (posicionPunto) {
@@ -117,42 +152,44 @@ public class CompiladorController {
         }
         if (trianguloActivo) {
             graficos.setFill(fondoFigura);
-
             double[] puntosX = { x, x - alto / 2.0, x + alto / 2.0 };
             double[] puntosY = { y, y + alto, y + alto };
-
             graficos.fillPolygon(puntosX, puntosY, 3);
             trianguloActivo = false;
         }
         if (circuloActivo) {
             graficos.setFill(fondoFigura);
-            graficos.fillOval(x - radio, y - radio, radio * 2, radio * 2);
+            graficos.fillOval(x - ancho / 2.0, y - alto / 2.0, ancho, alto);
             circuloActivo = false;
         }
 
-
+        // Dibujar figuras personalizadas
+        for (Figura f : figuras) {
+            f.dibujar(graficos);
+        }
     }
 
     private void leerArchivo() {
+        comandos.add("cir,120,245,12,25,red");
         comandos.add("lpr");
-        comandos.add("f,rojo");
+        comandos.add("f,red");
         comandos.add("ps,150,150");
-        comandos.add("lin,220,220,verde");
+        comandos.add("lin,220,220,green");
         comandos.add("ps,50,70");
         comandos.add("lin,120,20,red");
         comandos.add("ps,51,71");
-        comandos.add("lin,121,21,verde");
-        comandos.add("rec,100,100,80,50,azul");
-        comandos.add("rec,200,100,200,50,verde");
+        comandos.add("lin,121,21,green");
+        comandos.add("rec,100,100,80,50,blue");
+        comandos.add("rec,200,100,200,50,green");
         comandos.add("rec,50,300,80,100,black");
         comandos.add("tgl,150,200,80,black");
-        comandos.add("cir,110,120,40,black");
-
+        comandos.add("cir,110,120,80,80,black");
+        comandos.add("obj,rec,50,50,100,50,blue");
+        comandos.add("obj,cir,150,150,40,40,green");
     }
 
     private void lecturaComando() {
         if (comandos.isEmpty()) {
-            System.out.println("Mato");
             tiempo.stop();
             return;
         }
@@ -160,56 +197,66 @@ public class CompiladorController {
         String[] comando = comandos.remove(0).split(",");
         System.out.println("Comando: " + comando[0]);
 
-        // comando de color de fondo
-        if (comando[0].equals("f")) {
-            fondoActivo = true;
-            this.color = obtenerColor(comando[1]);
-        }
+        switch (comando[0]) {
+            case "f" -> {
+                fondoActivo = true;
+                color = obtenerColor(comando[1]);
+            }
+            case "lpr" -> limpiar = true;
+            case "ps" -> {
+                x = Integer.parseInt(comando[1]);
+                y = Integer.parseInt(comando[2]);
+                posicionPunto = true;
+            }
+            case "lin" -> {
+                ancho = Integer.parseInt(comando[1]);
+                alto = Integer.parseInt(comando[2]);
+                colorFigura = obtenerColor(comando[3]);
+                lineaActiva = true;
+            }
+            case "rec" -> {
+                x = Integer.parseInt(comando[1]);
+                y = Integer.parseInt(comando[2]);
+                ancho = Integer.parseInt(comando[3]);
+                alto = Integer.parseInt(comando[4]);
+                fondoFigura = obtenerColor(comando[5]);
+                rectanguloActivo = true;
+            }
+            case "tgl" -> {
+                x = Integer.parseInt(comando[1]);
+                y = Integer.parseInt(comando[2]);
+                alto = Integer.parseInt(comando[3]);
+                fondoFigura = obtenerColor(comando[4]);
+                trianguloActivo = true;
+            }
+            case "cir" -> {
+                x = Integer.parseInt(comando[1]);
+                y = Integer.parseInt(comando[2]);
+                ancho = Integer.parseInt(comando[3]);
+                alto = Integer.parseInt(comando[4]);
+                fondoFigura = obtenerColor(comando[5]);
+                circuloActivo = true;
+            }
+            case "obj" -> {
+                String tipo = comando[1];
+                int x = Integer.parseInt(comando[2]);
+                int y = Integer.parseInt(comando[3]);
+                int ancho = Integer.parseInt(comando[4]);
+                int alto = Integer.parseInt(comando[5]);
+                Color color = obtenerColor(comando[6]);
+                Figura nuevaFigura = null;
 
-        // comando limpiar
-        else if (comando[0].equals("lpr")) {
-            limpiar = true;
-        }
+                switch (tipo) {
+                    case "rec" -> nuevaFigura = new Rectangulo("obj", color, x, y, ancho, alto);
+                    case "cir" -> nuevaFigura = new Circulo("obj", color, x, y, ancho, alto);
+                    case "ln" -> nuevaFigura = new Circulo("obj", color, x, y, ancho, alto);
+                    default -> System.out.println("Tipo de figura no reconocido: " + tipo);
+                }
 
-        // comando punto
-        else if (comando[0].equals("ps")) {
-            this.x = Integer.parseInt(comando[1]);
-            this.y = Integer.parseInt(comando[2]);
-            posicionPunto = true;
-        }
-
-        // comando línea
-        else if (comando[0].equals("lin")) {
-            this.ancho = Integer.parseInt(comando[1]);
-            this.alto = Integer.parseInt(comando[2]);
-            this.colorFigura = obtenerColor(comando[3]);
-            lineaActiva = true;
-        }
-
-        // comando rectángulo
-        else if (comando[0].equals("rec")) {
-            this.x = Integer.parseInt(comando[1]);
-            this.y = Integer.parseInt(comando[2]);
-            this.ancho = Integer.parseInt(comando[3]);
-            this.alto = Integer.parseInt(comando[4]);
-            this.fondoFigura = obtenerColor(comando[5]);
-            rectanguloActivo = true;
-        }
-        //comando triangulo
-        else if (comando[0].equals("tgl")) {
-            this.x = Integer.parseInt(comando[1]);
-            this.y = Integer.parseInt(comando[2]);
-            this.alto = Integer.parseInt(comando[3]);
-            this.fondoFigura = obtenerColor(comando[4]);
-            trianguloActivo = true;
-        }
-        //comando circulo
-        else if(comando[0].equals("cir")){
-            this.x = Integer.parseInt(comando[1]);
-            this.y = Integer.parseInt(comando[2]);
-            this.radio = Integer.parseInt(comando[3]);
-            this.fondoFigura = obtenerColor(comando[4]);
-            circuloActivo = true;
+                if (nuevaFigura != null) {
+                    figuras.add(nuevaFigura);
+                }
+            }
         }
     }
 
@@ -243,11 +290,11 @@ public class CompiladorController {
                 if ((int) t % 5 == 1) {
                     tiempoInicio[0] = System.nanoTime();
                     lecturaComando();
+                    System.out.println(System.getProperty("javafx.runtime.version"));
                 }
                 pintar();
             }
         };
         tiempo.start();
     }
-
 }
