@@ -167,13 +167,28 @@ public class CompiladorController {
         }
     }
 
+    //----------------INTEGRAR NOMBRE DE FIGURA---------------------
+
+//    DE ACUERDO A LA GAMATICA
+//        primero debemos definir el nombe de la figura
+//        despues es ir colocando los parametros
+//            circulo1 = cir,20,45,red;
+//        a ese figura con NOMBRE sera la manera de representar la figura
+//
+//        Gracias a ese identificador, después podemos aplicar comandos sobre esa figura:
+//            comandos.add("mv, circulo1, abajo, 10;");
+//            comandos.add("mv, circulo1, arriba, 5;");
+
+    //----------------INTEGRAR NOMBRE DE FIGURA---------------------
+
+
     //----------------EJECUCION---------------------
 
     //    simulacion de instruccionws
     private void leerArchivo() {
-//        comandos.add("FIGURA, ALTO ,ANCHO ,X, Y, COLOR");
+//        comandos.add("FIGURA, x ,y ,ancho, alto, COLOR");
 
-        comandos.add("cir,220,345,12,25,red");
+        comandos.add("cir,20,45,222,225,red");
         comandos.add("lpr");
         comandos.add("f,red");
         comandos.add("ps,150,150");
@@ -249,7 +264,7 @@ public class CompiladorController {
                 fondoFigura = obtenerColor(comando[5]);
                 circuloActivo = true;
             }
-//            objeto
+//            objeto se crea
             case "obj" -> {
                 String tipo = comando[1];
                 int x = Integer.parseInt(comando[2]);
