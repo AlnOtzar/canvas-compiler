@@ -72,10 +72,7 @@ public class CompiladorController {
         this.escena = escena;
     }
 
-    public void iniciar() {
-        componentesIniciar();
-        ciclo();
-    }
+
 
     abstract class Figura {
         String id;
@@ -89,6 +86,7 @@ public class CompiladorController {
         abstract void dibujar(GraphicsContext g);
     }
 
+//    rectangulo (w, h, red) -> "int, int, c"
     class Rectangulo extends Figura {
         int x, y, ancho, alto;
 
@@ -169,8 +167,13 @@ public class CompiladorController {
         }
     }
 
+    //----------------EJECUCION---------------------
+
+    //    simulacion de instruccionws
     private void leerArchivo() {
-        comandos.add("cir,120,245,12,25,red");
+//        comandos.add("FIGURA, ALTO ,ANCHO ,X, Y, COLOR");
+
+        comandos.add("cir,220,345,12,25,red");
         comandos.add("lpr");
         comandos.add("f,red");
         comandos.add("ps,150,150");
@@ -188,32 +191,39 @@ public class CompiladorController {
         comandos.add("obj,cir,150,150,40,40,green");
     }
 
+//    si comandos esta vacio, entonces dejas de leer
     private void lecturaComando() {
         if (comandos.isEmpty()) {
             tiempo.stop();
             return;
         }
 
+//        creamos un arreglo de string para los momandos y los vamos imprimiendo
         String[] comando = comandos.remove(0).split(",");
         System.out.println("Comando: " + comando[0]);
 
         switch (comando[0]) {
+//            fondo
             case "f" -> {
                 fondoActivo = true;
                 color = obtenerColor(comando[1]);
             }
+//            limpiar
             case "lpr" -> limpiar = true;
+//            posicion
             case "ps" -> {
                 x = Integer.parseInt(comando[1]);
                 y = Integer.parseInt(comando[2]);
                 posicionPunto = true;
             }
+//            linea
             case "lin" -> {
                 ancho = Integer.parseInt(comando[1]);
                 alto = Integer.parseInt(comando[2]);
                 colorFigura = obtenerColor(comando[3]);
                 lineaActiva = true;
             }
+//            rectangulo
             case "rec" -> {
                 x = Integer.parseInt(comando[1]);
                 y = Integer.parseInt(comando[2]);
@@ -222,6 +232,7 @@ public class CompiladorController {
                 fondoFigura = obtenerColor(comando[5]);
                 rectanguloActivo = true;
             }
+//            triangulo
             case "tgl" -> {
                 x = Integer.parseInt(comando[1]);
                 y = Integer.parseInt(comando[2]);
@@ -229,6 +240,7 @@ public class CompiladorController {
                 fondoFigura = obtenerColor(comando[4]);
                 trianguloActivo = true;
             }
+//            circulo
             case "cir" -> {
                 x = Integer.parseInt(comando[1]);
                 y = Integer.parseInt(comando[2]);
@@ -237,6 +249,7 @@ public class CompiladorController {
                 fondoFigura = obtenerColor(comando[5]);
                 circuloActivo = true;
             }
+//            objeto
             case "obj" -> {
                 String tipo = comando[1];
                 int x = Integer.parseInt(comando[2]);
@@ -259,25 +272,14 @@ public class CompiladorController {
             }
         }
     }
-
-    private Color obtenerColor(String colorStr) {
-        return switch (colorStr.toLowerCase()) {
-            case "rojo", "red" -> Color.RED;
-            case "azul", "blue" -> Color.BLUE;
-            case "verde", "green" -> Color.GREEN;
-            default -> Color.BLACK;
-        };
-    }
-
-    private void cerrarJuego() {
-        Stage stage = (Stage) canvas.getScene().getWindow();
-        stage.setOnCloseRequest(event -> {
-            tiempo.stop();
-            stage.close();
-        });
+//    ---
+    public void iniciar() {
+        componentesIniciar();
+        ciclo();
     }
 
     private void componentesIniciar() {
+
         graficos = canvas.getGraphicsContext2D();
     }
 
@@ -297,4 +299,27 @@ public class CompiladorController {
         };
         tiempo.start();
     }
+
+    //----------------EJECUCION---------------------
+
+    private Color obtenerColor(String colorStr) {
+        return switch (colorStr.toLowerCase()) {
+            case "rojo", "red" -> Color.RED;
+            case "azul", "blue" -> Color.BLUE;
+            case "verde", "green" -> Color.GREEN;
+            default -> Color.BLACK;
+        };
+    }
+
+    private void cerrarJuego() {
+        Stage stage = (Stage) canvas.getScene().getWindow();
+        stage.setOnCloseRequest(event -> {
+            tiempo.stop();
+            stage.close();
+        });
+    }
+
+
+
+
 }
