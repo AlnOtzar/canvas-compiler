@@ -83,7 +83,14 @@ public class CompiladorController {
             this.color = color;
         }
 
+//        verifica si el id es igul
+        boolean coincideId(String idBuscado) {
+            return this.id.equalsIgnoreCase(idBuscado);
+        }
+
         abstract void dibujar(GraphicsContext g);
+//        abstract void mover(int dx, int dy);
+
     }
 
 //    rectangulo (w, h, red) -> "int, int, c"
@@ -120,6 +127,43 @@ public class CompiladorController {
         void dibujar(GraphicsContext g) {
             g.setFill(color);
             g.fillOval(x - ancho / 2.0, y - alto / 2.0, ancho, alto);
+        }
+    }
+
+    class Linea extends Figura {
+        int x1, y1, x2, y2;
+
+        Linea(String id, Color color, int x1, int y1, int x2, int y2) {
+            super(id, color);
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+        }
+
+        @Override
+        void dibujar(GraphicsContext g) {
+            g.setStroke(color);
+            g.strokeLine(x1, y1, x2, y2);
+        }
+    }
+
+    class Triangulo extends Figura {
+        int x, y, alto;
+
+        Triangulo(String id, Color color, int x, int y, int alto) {
+            super(id, color);
+            this.x = x;
+            this.y = y;
+            this.alto = alto;
+        }
+
+        @Override
+        void dibujar(GraphicsContext g) {
+            g.setFill(color);
+            double[] puntosX = {x, x - alto/2.0, x + alto/2.0};
+            double[] puntosY = {y, y + alto, y + alto};
+            g.fillPolygon(puntosX, puntosY, 3);
         }
     }
 
@@ -179,6 +223,79 @@ public class CompiladorController {
 //            comandos.add("mv, circulo1, abajo, 10;");
 //            comandos.add("mv, circulo1, arriba, 5;");
 
+    private void procesarComandoConNombre(String comando) {
+        // Formato: "nombre = tipo,param1,param2,...,color;"
+        String[] partes = comando.split("=");
+        String id = partes[0].trim().replace(";", "");
+        String parametros = partes[1].trim().replace(";", "");
+
+        // Verificar ID duplicado
+        for (Figura f : figuras) {
+            if (f.coincideId(id)) {
+                txtMensajes.appendText("Error: '" + id + "' ya existe\n");
+                return;
+            }
+        }
+
+        String[] args = parametros.split(",");
+        String tipo = args[0].trim();
+
+        try {
+            switch(tipo) {
+                case "cir": // Círculo: "nombre = cir,x,y,ancho,alto,color;"
+                    figuras.add(new Circulo(
+                            id,
+                            obtenerColor(args[5].trim()),
+                            Integer.parseInt(args[1].trim()),
+                            Integer.parseInt(args[2].trim()),
+                            Integer.parseInt(args[3].trim()),
+                            Integer.parseInt(args[4].trim())
+                    ));
+                    break;
+
+                case "rec": // Rectángulo: "nombre = rec,x,y,ancho,alto,color;"
+                    figuras.add(new Rectangulo(
+                            id,
+                            obtenerColor(args[5].trim()),
+                            Integer.parseInt(args[1].trim()),
+                            Integer.parseInt(args[2].trim()),
+                            Integer.parseInt(args[3].trim()),
+                            Integer.parseInt(args[4].trim())
+                    ));
+                    break;
+
+                case "lin": // Línea: "nombre = lin,x1,y1,x2,y2,color;"
+                    // (Requiere implementar clase Linea)
+                    figuras.add(new Linea(
+                            id,
+                            obtenerColor(args[5].trim()),
+                            Integer.parseInt(args[1].trim()),
+                            Integer.parseInt(args[2].trim()),
+                            Integer.parseInt(args[3].trim()),
+                            Integer.parseInt(args[4].trim())
+                    ));
+                    break;
+
+                case "tgl": // Triángulo: "nombre = tgl,x,y,alto,color;"
+                    figuras.add(new Triangulo(
+                            id,
+                            obtenerColor(args[4].trim()),
+                            Integer.parseInt(args[1].trim()),
+                            Integer.parseInt(args[2].trim()),
+                            Integer.parseInt(args[3].trim())
+                    ));
+                    break;
+
+                default:
+                    txtMensajes.appendText("Error: Tipo de figura '" + tipo + "' no reconocido\n");
+                    return;
+            }
+            txtMensajes.appendText("Figura '" + id + "' creada exitosamente\n");
+        } catch (Exception e) {
+            txtMensajes.appendText("Error en los parámetros para '" + id + "'. Verifica los valores\n");
+        }
+    }
+
     //----------------INTEGRAR NOMBRE DE FIGURA---------------------
 
 
@@ -188,28 +305,36 @@ public class CompiladorController {
     private void leerArchivo() {
 //        comandos.add("FIGURA, x ,y ,ancho, alto, COLOR");
 
-        comandos.add("cir,20,45,222,225,red");
-        comandos.add("lpr");
-        comandos.add("f,red");
-        comandos.add("ps,150,150");
-        comandos.add("lin,220,220,green");
-        comandos.add("ps,50,70");
-        comandos.add("lin,120,20,red");
-        comandos.add("ps,51,71");
-        comandos.add("lin,121,21,green");
-        comandos.add("rec,100,100,80,50,blue");
-        comandos.add("rec,200,100,200,50,green");
-        comandos.add("rec,50,300,80,100,black");
-        comandos.add("tgl,150,200,80,black");
-        comandos.add("cir,110,120,80,80,black");
-        comandos.add("obj,rec,50,50,100,50,blue");
-        comandos.add("obj,cir,150,150,40,40,green");
+        comandos.add("circuloEE = cir,20,45,222,225,red");
+//        comandos.add("lpr");
+//        comandos.add("f,red");
+//        comandos.add("ps,150,150");
+//        comandos.add("lin,220,220,green");
+//        comandos.add("ps,50,70");
+//        comandos.add("lin,120,20,red");
+//        comandos.add("ps,51,71");
+//        comandos.add("lin,121,21,green");
+//        comandos.add("rec,100,100,80,50,blue");
+//        comandos.add("rec,200,100,200,50,green");
+//        comandos.add("rec,50,300,80,100,black");
+//        comandos.add("tgl,150,200,80,black");
+//        comandos.add("cir,110,120,80,80,black");
+//        comandos.add("obj,rec,50,50,100,50,blue");
+//        comandos.add("obj,cir,150,150,40,40,green");
     }
 
 //    si comandos esta vacio, entonces dejas de leer
     private void lecturaComando() {
         if (comandos.isEmpty()) {
             tiempo.stop();
+            return;
+        }
+
+        String comandoCompleto = comandos.remove(0);
+
+        // Comandos con nombre
+        if (comandoCompleto.contains("=")) {
+            procesarComandoConNombre(comandoCompleto);
             return;
         }
 
