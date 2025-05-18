@@ -237,6 +237,11 @@ public class CompiladorController {
             }
         }
 
+        if (!comando.contains("=")) {
+            txtMensajes.appendText("Error: Falta '=' en el comando\n");
+            return;
+        }
+
         String[] args = parametros.split(",");
         String tipo = args[0].trim();
 
@@ -305,12 +310,13 @@ public class CompiladorController {
     private void leerArchivo() {
 //        comandos.add("FIGURA, x ,y ,ancho, alto, COLOR");
 
-        comandos.add("circuloEE = cir,20,45,222,225,red");
+        comandos.add("circuloEE = cir,20,45,40,40,red");
+        comandos.add("rectanguslo3 = rec,100,100,80,50,blue");
 //        comandos.add("LineaXD = lin,220,220,green");
+        comandos.add("TRULO = tgl,150,200,80,black");
         comandos.add("lpr");
-        comandos.add("hola = ps,150,150");
-        comandos.add("rectangulo3 = rec,100,100,80,50,blue");
-        comandos.add("TRIANGULO = tgl,150,200,80,black");
+        comandos.add("f,red");
+        comandos.add("ps,150,150");
 
     }
 
@@ -321,16 +327,15 @@ public class CompiladorController {
             return;
         }
 
-        String comandoCompleto = comandos.remove(0);
+        String comandoCompleto = comandos.remove(0); // Solo remover una vez
 
-        // Comandos con nombre
         if (comandoCompleto.contains("=")) {
             procesarComandoConNombre(comandoCompleto);
             return;
         }
 
 //        creamos un arreglo de string para los momandos y los vamos imprimiendo
-        String[] comando = comandos.remove(0).split(",");
+        String[] comando = comandoCompleto.split(","); // Usar comandoCompleto en lugar de remover otro
         System.out.println("Comando: " + comando[0]);
 
         switch (comando[0]) {
