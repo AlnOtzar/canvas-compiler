@@ -306,21 +306,12 @@ public class CompiladorController {
 //        comandos.add("FIGURA, x ,y ,ancho, alto, COLOR");
 
         comandos.add("circuloEE = cir,20,45,222,225,red");
-//        comandos.add("lpr");
-//        comandos.add("f,red");
-//        comandos.add("ps,150,150");
-//        comandos.add("lin,220,220,green");
-//        comandos.add("ps,50,70");
-//        comandos.add("lin,120,20,red");
-//        comandos.add("ps,51,71");
-//        comandos.add("lin,121,21,green");
-//        comandos.add("rec,100,100,80,50,blue");
-//        comandos.add("rec,200,100,200,50,green");
-//        comandos.add("rec,50,300,80,100,black");
-//        comandos.add("tgl,150,200,80,black");
-//        comandos.add("cir,110,120,80,80,black");
-//        comandos.add("obj,rec,50,50,100,50,blue");
-//        comandos.add("obj,cir,150,150,40,40,green");
+//        comandos.add("LineaXD = lin,220,220,green");
+        comandos.add("lpr");
+        comandos.add("hola = ps,150,150");
+        comandos.add("rectangulo3 = rec,100,100,80,50,blue");
+        comandos.add("TRIANGULO = tgl,150,200,80,black");
+
     }
 
 //    si comandos esta vacio, entonces dejas de leer
