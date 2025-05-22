@@ -1,4 +1,4 @@
-package mx.unam.aragon.interprete;
+package unam.aragon.mx;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +14,8 @@ public class Compilador extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("KinderFES");
         stage.setScene(scene);
-        ((CompiladorController)fxmlLoader.getController()).setEscena(scene);
-        //((CompiladorController)fxmlLoader.getController()).iniciar();
+        //((CompiladorController)fxmlLoader.getController()).setEscena(scene);
+        ((CompiladorController)fxmlLoader.getController()).iniciar();
         stage.show();
         stage.requestFocus();
         stage.show();

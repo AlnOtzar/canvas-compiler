@@ -1,4 +1,4 @@
-package mx.unam.aragon.interprete;
+package unam.aragon.mx;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -11,6 +11,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+
+import java.io.*;
 import java.util.ArrayList;
 
 public class CompiladorController {
@@ -56,10 +58,24 @@ public class CompiladorController {
     @FXML
     private TextArea txtMensajes;
 
+    private final String archivoDestino = "codigo.txt";
     @FXML
-    void actionCompilar(ActionEvent event) {
-        // Por ahora vacío
+    void actionCompilar() {
+        this.guardarArchivo();
+
+        try{
+            Reader reader = new BufferedReader(new FileReader("src/codigoPrueba.txt"));
+
+            Analizador_Lexico lexer = new Analizador_Lexico(reader);
+            parser parser = new parser(lexer);
+            parser.parse();
+            System.out.println("Análisis sintáctico completado sin errores.");
+        } catch (Exception e) {
+            System.err.println("Error durante el análisis: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     @FXML
     void actionEjecutar(ActionEvent event) {
@@ -67,6 +83,19 @@ public class CompiladorController {
         this.lecturaComando();
         this.iniciar();
     }
+
+    private void guardarArchivo() {
+        String rutaArchivo = "src/codigoPrueba.txt";
+        String contenido = txtCodigo.getText();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
+            writer.write(contenido);
+            System.out.println("Archivo guardado correctamente.");
+        } catch (IOException e) {
+            System.err.println("Error al guardar el archivo: " + e.getMessage());
+        }
+    }
+
 
     public void setEscena(Scene escena) {
         this.escena = escena;
@@ -83,7 +112,7 @@ public class CompiladorController {
             this.color = color;
         }
 
-//        verifica si el id es igul
+        //        verifica si el id es igul
         boolean coincideId(String idBuscado) {
             return this.id.equalsIgnoreCase(idBuscado);
         }
@@ -93,7 +122,7 @@ public class CompiladorController {
 
     }
 
-//    rectangulo (w, h, red) -> "int, int, c"
+    //    rectangulo (w, h, red) -> "int, int, c"
     class Rectangulo extends Figura {
         int x, y, ancho, alto;
 
@@ -320,7 +349,7 @@ public class CompiladorController {
 
     }
 
-//    si comandos esta vacio, entonces dejas de leer
+    //    si comandos esta vacio, entonces dejas de leer
     private void lecturaComando() {
         if (comandos.isEmpty()) {
             tiempo.stop();
@@ -408,7 +437,7 @@ public class CompiladorController {
             }
         }
     }
-//    ---
+    //    ---
     public void iniciar() {
         componentesIniciar();
         ciclo();
@@ -440,9 +469,9 @@ public class CompiladorController {
 
     private Color obtenerColor(String colorStr) {
         return switch (colorStr.toLowerCase()) {
-            case "rojo", "red" -> Color.RED;
-            case "azul", "blue" -> Color.BLUE;
-            case "verde", "green" -> Color.GREEN;
+            case "red" -> Color.RED;
+            case "blue" -> Color.BLUE;
+            case "green" -> Color.GREEN;
             default -> Color.BLACK;
         };
     }

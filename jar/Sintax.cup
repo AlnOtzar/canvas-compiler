@@ -1,0 +1,67 @@
+package unam.aragon.mx;
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+
+parser code
+{:
+    public String resultado="";
+    public static LinkedList<TError> TablaES = new LinkedList<TError>();
+
+    public void syntax_error(Symbol s)
+    {
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+
+        System.out.println("!Error Sintactico Recuperado!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+        TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
+        TablaES.add(datos);
+
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+
+        System.out.println("!Error Sintactico no2!");
+        System.out.println("\t\tLexema: "+lexema);
+        System.out.println("\t\tFila: "+fila);
+        System.out.println("\t\tColumna: "+columna);
+
+         TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
+        TablaES.add(datos);
+
+    }
+:}
+
+action code
+{:
+:}
+
+terminal
+    Lpr, F, Ps, Rec, Ln, Cir,
+    IGUAL, COMA, PUNTOCOMA, PAR_ABRE, PAR_CIERRA,
+    C, NUM;
+
+non terminal programa, instrucciones, instruccion;
+
+start with programa;
+
+programa ::= instrucciones;
+
+instrucciones ::= instruccion
+                | instrucciones instruccion;
+
+instruccion ::= Lpr PUNTOCOMA
+              | F IGUAL C PUNTOCOMA
+              | Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
+              | Rec PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
+              | Ln PAR_ABRE NUM COMA NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA
+              | Cir PAR_ABRE NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA;
