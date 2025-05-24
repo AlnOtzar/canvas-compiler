@@ -1,67 +1,174 @@
 package unam.aragon.mx;
+
 import java_cup.runtime.Symbol;
 import java.util.LinkedList;
+import unam.aragon.mx.ComandoGlobal;
 
 
 parser code
 {:
-    public String resultado="";
+    public String resultado = "";
     public static LinkedList<TError> TablaES = new LinkedList<TError>();
+    public static LinkedList<String> comandos = new LinkedList<>();
 
-    public void syntax_error(Symbol s)
-    {
-        String lexema = s.value.toString();
-        int fila = s.right;
-        int columna = s.left;
+    private boolean errorRecuperado = false;
 
-        System.out.println("!Error Sintactico Recuperado!");
-        System.out.println("\t\tLexema: "+lexema);
-        System.out.println("\t\tFila: "+fila);
-        System.out.println("\t\tColumna: "+columna);
+    private String mensajeErrorPersonalizado = null;
 
-        TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
-        TablaES.add(datos);
+    public void syntax_error(Symbol s) {
+        if (errorRecuperado) {
+            errorRecuperado = false;
+            return;
+        }
+
+        if (s == null) return;
+
 
     }
 
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
-    {
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
+        if (s == null || s.value == null) return;
+
         String lexema = s.value.toString();
-        int fila = s.right;
-        int columna = s.left;
+        int fila = (s.left >= 0) ? s.left + 1 : -1;
+        int columna = (s.right >= 0) ? s.right + 1 : -1;
 
-        System.out.println("!Error Sintactico no2!");
-        System.out.println("\t\tLexema: "+lexema);
-        System.out.println("\t\tFila: "+fila);
-        System.out.println("\t\tColumna: "+columna);
+        TablaES.add(new TError(lexema, fila, columna, "Error Sintáctico", "Caracter no esperado (no recuperable)"));
+    }
 
-         TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
-        TablaES.add(datos);
-
+    public void registrarError(Symbol sym, String descripcion) {
+        int fila = (sym != null && sym.left >= 0) ? sym.left + 1 : -1;
+        int columna = (sym != null && sym.right >= 0) ? sym.right + 1 : -1;
+        String lexema = (sym != null && sym.value != null) ? sym.value.toString() : "EOF";
+        TablaES.add(new TError(lexema, fila, columna, "Error Sintáctico", descripcion));
     }
 :}
 
-action code
-{:
-:}
-
+terminal String C;
 terminal
     Lpr, F, Ps, Rec, Ln, Cir,
     IGUAL, COMA, PUNTOCOMA, PAR_ABRE, PAR_CIERRA,
-    C, NUM;
+    NUM;
 
 non terminal programa, instrucciones, instruccion;
+non terminal String color;
+
 
 start with programa;
 
 programa ::= instrucciones;
 
 instrucciones ::= instruccion
-                | instrucciones instruccion;
+               | instrucciones instruccion;
 
-instruccion ::= Lpr PUNTOCOMA
-              | F IGUAL C PUNTOCOMA
-              | Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
-              | Rec PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
-              | Ln PAR_ABRE NUM COMA NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA
-              | Cir PAR_ABRE NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA;
+instruccion ::=
+      Lpr PUNTOCOMA
+    | error PUNTOCOMA
+        {: errorRecuperado = true;
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
+                           registrarError(sym, "Falta el identificador de instrucción (;)");
+                            ComandoGlobal.comando.add("lpr");:}
+    | Lpr error
+            {: errorRecuperado = true;
+                               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 2);
+                               registrarError(sym, "Falta el identificador de instrucción (;)"); :}
+
+
+    | F IGUAL C PUNTOCOMA
+        {:
+            String colorTexto = (String)((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 1)).value;
+            ComandoGlobal.comandos.add("f," + colorTexto);
+        :}
+    | error IGUAL C PUNTOCOMA
+        {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 1);
+                   registrarError(sym, "Falta el identificador de instrucción (limpiar)"); :}
+    | F error C PUNTOCOMA
+            {: errorRecuperado = true;
+                       Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
+                       registrarError(sym, "Falta el identificador de instrucción (=)"); :}
+    | F IGUAL error PUNTOCOMA
+            {: errorRecuperado = true;
+                       Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
+                       registrarError(sym, "Falta el identificador de instrucción (color)"); :}
+    | F IGUAL C error
+            {: errorRecuperado = true;
+                       Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                       registrarError(sym, "Falta el identificador de instrucción (;)"); :}
+    | F error
+            {: errorRecuperado = true;
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                           registrarError(sym, "Faltan los identificadores de instrucciónes ( =, color , ; )"); :}
+    | F IGUAL error
+            {: errorRecuperado = true;
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                           registrarError(sym, "Faltan los identificadores de instrucciónes ( color , ; )"); :}
+
+
+    | Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
+    | error IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
+           registrarError(sym, "Falta el identificador de instrucción (Ps)"); :}
+
+    | Ps error PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 1);
+           registrarError(sym, "Falta un '='"); :}
+
+    | Ps IGUAL error NUM COMA NUM PAR_CIERRA PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
+           registrarError(sym, "Falta un '('"); :}
+
+    | Ps IGUAL PAR_ABRE error COMA NUM PAR_CIERRA PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 3);
+           registrarError(sym, "Falta el primer número"); :}
+
+    | Ps IGUAL PAR_ABRE NUM error NUM PAR_CIERRA PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 4);
+           registrarError(sym, "Falta una coma ',' entre los parámetros"); :}
+
+    | Ps IGUAL PAR_ABRE NUM COMA error PAR_CIERRA PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 5);
+           registrarError(sym, "Falta el segundo número"); :}
+
+    | Ps IGUAL PAR_ABRE NUM COMA NUM error PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 6);
+           registrarError(sym, "Falta un ')'"); :}
+
+    | Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA error
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 7);
+           registrarError(sym, "Falta un ';'"); :}
+
+    | Ps IGUAL PAR_ABRE NUM COMA error
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 6 + 5);
+           registrarError(sym, "Falta un segundo número y cierre de paréntesis"); :}
+
+    | Ps IGUAL PAR_ABRE error
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
+           registrarError(sym, "Paréntesis sin parámetros"); :}
+
+    | Ps IGUAL error
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 3 + 2);
+           registrarError(sym, "Falta paréntesis y parámetros"); :}
+
+    | Ps IGUAL error PUNTOCOMA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
+           registrarError(sym, "Falta paréntesis con parámetros"); :}
+
+
+
+    | Rec PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
+    | Ln PAR_ABRE NUM COMA NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA
+    | Cir PAR_ABRE NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA;
+

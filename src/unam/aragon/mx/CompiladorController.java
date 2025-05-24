@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class CompiladorController {
 
@@ -35,7 +36,6 @@ public class CompiladorController {
     boolean lineaActiva = false;
     boolean limpiar = false;
     boolean rectanguloActivo = false;
-    boolean trianguloActivo = false;
     boolean circuloActivo = false;
 
     // colores
@@ -59,29 +59,49 @@ public class CompiladorController {
     private TextArea txtMensajes;
 
     private final String archivoDestino = "codigo.txt";
+
+
     @FXML
-    void actionCompilar() {
+    public void actionCompilar() {
+        parser.TablaES.clear();
+        ComandoGlobal.comandos.clear();
+        parser.TablaES.clear();
+        txtMensajes.clear();
         this.guardarArchivo();
 
-        try{
+        try {
             Reader reader = new BufferedReader(new FileReader("src/codigoPrueba.txt"));
 
-            Analizador_Lexico lexer = new Analizador_Lexico(reader);
-            parser parser = new parser(lexer);
-            parser.parse();
-            System.out.println("Análisis sintáctico completado sin errores.");
+            Analizador_Lexico analizadorLexico = new Analizador_Lexico(reader);
+            parser sintactico = new parser(analizadorLexico);
+
+            sintactico.parse();
+
+            if (!parser.TablaES.isEmpty()) {
+                txtMensajes.appendText("Errores sintácticos encontrados:\n");
+                for (TError e : parser.TablaES) {
+                    txtMensajes.appendText(e.toString() + "\n");
+                }
+            } else {
+                txtMensajes.appendText("Compilación terminada exitosamente. No se encontraron errores.\n");
+            }
+
         } catch (Exception e) {
-            System.err.println("Error durante el análisis: " + e.getMessage());
             e.printStackTrace();
+            txtMensajes.appendText("Error durante la compilación: " + e.getMessage() + "\n");
         }
     }
 
 
     @FXML
     void actionEjecutar(ActionEvent event) {
-        this.leerArchivo();
-        this.lecturaComando();
+        if (tiempo != null) {
+            tiempo.stop();
+        }
+
+        this.indiceComandoc = 0;
         this.iniciar();
+        this.ciclo();   // solo aquí debe arrancar
     }
 
     private void guardarArchivo() {
@@ -100,7 +120,6 @@ public class CompiladorController {
     public void setEscena(Scene escena) {
         this.escena = escena;
     }
-
 
 
     abstract class Figura {
@@ -177,25 +196,6 @@ public class CompiladorController {
         }
     }
 
-    class Triangulo extends Figura {
-        int x, y, alto;
-
-        Triangulo(String id, Color color, int x, int y, int alto) {
-            super(id, color);
-            this.x = x;
-            this.y = y;
-            this.alto = alto;
-        }
-
-        @Override
-        void dibujar(GraphicsContext g) {
-            g.setFill(color);
-            double[] puntosX = {x, x - alto/2.0, x + alto/2.0};
-            double[] puntosY = {y, y + alto, y + alto};
-            g.fillPolygon(puntosX, puntosY, 3);
-        }
-    }
-
     private void pintar() {
         if (fondoActivo) {
             graficos.setFill(color);
@@ -220,13 +220,6 @@ public class CompiladorController {
             graficos.setFill(fondoFigura);
             graficos.fillRect(x, y, ancho, alto);
             rectanguloActivo = false;
-        }
-        if (trianguloActivo) {
-            graficos.setFill(fondoFigura);
-            double[] puntosX = { x, x - alto / 2.0, x + alto / 2.0 };
-            double[] puntosY = { y, y + alto, y + alto };
-            graficos.fillPolygon(puntosX, puntosY, 3);
-            trianguloActivo = false;
         }
         if (circuloActivo) {
             graficos.setFill(fondoFigura);
@@ -310,15 +303,6 @@ public class CompiladorController {
                     ));
                     break;
 
-                case "tgl": // Triángulo: "nombre = tgl,x,y,alto,color;"
-                    figuras.add(new Triangulo(
-                            id,
-                            obtenerColor(args[4].trim()),
-                            Integer.parseInt(args[1].trim()),
-                            Integer.parseInt(args[2].trim()),
-                            Integer.parseInt(args[3].trim())
-                    ));
-                    break;
 
                 default:
                     txtMensajes.appendText("Error: Tipo de figura '" + tipo + "' no reconocido\n");
@@ -335,112 +319,32 @@ public class CompiladorController {
 
     //----------------EJECUCION---------------------
 
-    //    simulacion de instruccionws
-    private void leerArchivo() {
-//        comandos.add("FIGURA, x ,y ,ancho, alto, COLOR");
+    private int indiceComandoc = 0;
 
-        comandos.add("circuloEE = cir,20,45,40,40,red");
-        comandos.add("rectanguslo3 = rec,100,100,80,50,blue");
-//        comandos.add("LineaXD = lin,220,220,green");
-        comandos.add("TRULO = tgl,150,200,80,black");
-        comandos.add("lpr");
-        comandos.add("f,red");
-        comandos.add("ps,150,150");
-
-    }
-
-    //    si comandos esta vacio, entonces dejas de leer
     private void lecturaComando() {
-        if (comandos.isEmpty()) {
-            tiempo.stop();
-            return;
-        }
-
-        String comandoCompleto = comandos.remove(0); // Solo remover una vez
-
-        if (comandoCompleto.contains("=")) {
-            procesarComandoConNombre(comandoCompleto);
-            return;
-        }
-
-//        creamos un arreglo de string para los momandos y los vamos imprimiendo
-        String[] comando = comandoCompleto.split(","); // Usar comandoCompleto en lugar de remover otro
-        System.out.println("Comando: " + comando[0]);
-
-        switch (comando[0]) {
-//            fondo
-            case "f" -> {
-                fondoActivo = true;
-                color = obtenerColor(comando[1]);
-            }
-//            limpiar
-            case "lpr" -> limpiar = true;
-//            posicion
-            case "ps" -> {
-                x = Integer.parseInt(comando[1]);
-                y = Integer.parseInt(comando[2]);
-                posicionPunto = true;
-            }
-//            linea
-            case "lin" -> {
-                ancho = Integer.parseInt(comando[1]);
-                alto = Integer.parseInt(comando[2]);
-                colorFigura = obtenerColor(comando[3]);
-                lineaActiva = true;
-            }
-//            rectangulo
-            case "rec" -> {
-                x = Integer.parseInt(comando[1]);
-                y = Integer.parseInt(comando[2]);
-                ancho = Integer.parseInt(comando[3]);
-                alto = Integer.parseInt(comando[4]);
-                fondoFigura = obtenerColor(comando[5]);
-                rectanguloActivo = true;
-            }
-//            triangulo
-            case "tgl" -> {
-                x = Integer.parseInt(comando[1]);
-                y = Integer.parseInt(comando[2]);
-                alto = Integer.parseInt(comando[3]);
-                fondoFigura = obtenerColor(comando[4]);
-                trianguloActivo = true;
-            }
-//            circulo
-            case "cir" -> {
-                x = Integer.parseInt(comando[1]);
-                y = Integer.parseInt(comando[2]);
-                ancho = Integer.parseInt(comando[3]);
-                alto = Integer.parseInt(comando[4]);
-                fondoFigura = obtenerColor(comando[5]);
-                circuloActivo = true;
-            }
-//            objeto se crea
-            case "obj" -> {
-                String tipo = comando[1];
-                int x = Integer.parseInt(comando[2]);
-                int y = Integer.parseInt(comando[3]);
-                int ancho = Integer.parseInt(comando[4]);
-                int alto = Integer.parseInt(comando[5]);
-                Color color = obtenerColor(comando[6]);
-                Figura nuevaFigura = null;
-
-                switch (tipo) {
-                    case "rec" -> nuevaFigura = new Rectangulo("obj", color, x, y, ancho, alto);
-                    case "cir" -> nuevaFigura = new Circulo("obj", color, x, y, ancho, alto);
-                    case "ln" -> nuevaFigura = new Circulo("obj", color, x, y, ancho, alto);
-                    default -> System.out.println("Tipo de figura no reconocido: " + tipo);
+        if (indiceComandoc < ComandoGlobal.comandos.size()) {
+            String comando = ComandoGlobal.comandos.get(indiceComandoc);
+            String[] partes = comando.split(",");
+            switch (partes[0]) {
+                case "lpr" -> limpiar = true;
+                case "f" -> {
+                    fondoActivo = true;
+                    if (partes.length > 1) {
+                        color = obtenerColor(partes[1]);
+                    } else {
+                        System.out.println("Comando 'f' sin color");
+                    }
                 }
-
-                if (nuevaFigura != null) {
-                    figuras.add(nuevaFigura);
-                }
+                // otros casos (ps, rec, etc) aquí...
             }
+            indiceComandoc++;  // Avanza para la próxima llamada
+        } else {
+            System.out.println("No hay más comandos para procesar");
         }
     }
-    //    ---
+
     public void iniciar() {
         componentesIniciar();
-        ciclo();
     }
 
     private void componentesIniciar() {
@@ -457,7 +361,6 @@ public class CompiladorController {
                 if ((int) t % 5 == 1) {
                     tiempoInicio[0] = System.nanoTime();
                     lecturaComando();
-                    System.out.println(System.getProperty("javafx.runtime.version"));
                 }
                 pintar();
             }
@@ -466,15 +369,25 @@ public class CompiladorController {
     }
 
     //----------------EJECUCION---------------------
+    private static final Map<String, Color> colores = Map.of(
+            "red", Color.RED,
+            "blue", Color.BLUE,
+            "green", Color.GREEN,
+            "yellow", Color.YELLOW,
+            "black", Color.BLACK,
+            "orange", Color.ORANGE,
+            "white", Color.WHITE
+    );
 
     private Color obtenerColor(String colorStr) {
-        return switch (colorStr.toLowerCase()) {
-            case "red" -> Color.RED;
-            case "blue" -> Color.BLUE;
-            case "green" -> Color.GREEN;
-            default -> Color.BLACK;
-        };
+        if (colorStr == null) return Color.BLACK;
+
+        String colorLimpio = colorStr.trim().toLowerCase();
+        System.out.println("Color recibido (limpio): '" + colorLimpio + "'");
+
+        return colores.getOrDefault(colorLimpio, Color.BLACK);
     }
+
 
     private void cerrarJuego() {
         Stage stage = (Stage) canvas.getScene().getWindow();

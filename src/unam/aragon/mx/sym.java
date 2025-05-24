@@ -9,23 +9,24 @@ package unam.aragon.mx;
 public class sym {
   /* terminals */
   public static final int NUM = 14;
-  public static final int C = 13;
-  public static final int COMA = 9;
-  public static final int Cir = 7;
-  public static final int Ps = 4;
-  public static final int PAR_CIERRA = 12;
-  public static final int Rec = 5;
+  public static final int COMA = 10;
+  public static final int Cir = 8;
+  public static final int C = 2;
+  public static final int Ps = 5;
+  public static final int PAR_CIERRA = 13;
+  public static final int Rec = 6;
   public static final int EOF = 0;
-  public static final int PAR_ABRE = 11;
-  public static final int Lpr = 2;
-  public static final int IGUAL = 8;
+  public static final int PAR_ABRE = 12;
+  public static final int Lpr = 3;
+  public static final int IGUAL = 9;
   public static final int error = 1;
-  public static final int PUNTOCOMA = 10;
-  public static final int Ln = 6;
-  public static final int F = 3;
+  public static final int PUNTOCOMA = 11;
+  public static final int Ln = 7;
+  public static final int F = 4;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
+  "C",
   "Lpr",
   "F",
   "Ps",
@@ -37,7 +38,6 @@ public class sym {
   "PUNTOCOMA",
   "PAR_ABRE",
   "PAR_CIERRA",
-  "C",
   "NUM"
   };
 }

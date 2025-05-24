@@ -1,2 +1,5 @@
-limpar;
-	fondo=blue;
+fondo = yellow;
+
+fondo = green;
+
+fondo = red;

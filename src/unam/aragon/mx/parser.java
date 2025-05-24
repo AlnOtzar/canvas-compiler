@@ -7,7 +7,6 @@ package unam.aragon.mx;
 
 import java_cup.runtime.Symbol;
 import java.util.LinkedList;
-import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */
@@ -32,10 +31,15 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\012\000\002\002\004\000\002\002\003\000\002\003" +
+    "\000\032\000\002\002\004\000\002\002\003\000\002\003" +
     "\003\000\002\003\004\000\002\004\004\000\002\004\006" +
-    "\000\002\004\012\000\002\004\011\000\002\004\015\000" +
-    "\002\004\013" });
+    "\000\002\004\006\000\002\004\006\000\002\004\006\000" +
+    "\002\004\006\000\002\004\012\000\002\004\012\000\002" +
+    "\004\012\000\002\004\012\000\002\004\012\000\002\004" +
+    "\012\000\002\004\012\000\002\004\012\000\002\004\012" +
+    "\000\002\004\010\000\002\004\006\000\002\004\005\000" +
+    "\002\004\006\000\002\004\011\000\002\004\015\000\002" +
+    "\004\013" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -43,37 +47,79 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\057\000\016\004\012\005\014\006\006\007\007\010" +
-    "\013\011\005\001\002\000\004\002\061\001\002\000\004" +
-    "\015\051\001\002\000\004\012\042\001\002\000\004\015" +
-    "\034\001\002\000\020\002\000\004\012\005\014\006\006" +
-    "\007\007\010\013\011\005\001\002\000\020\002\uffff\004" +
-    "\uffff\005\uffff\006\uffff\007\uffff\010\uffff\011\uffff\001\002" +
-    "\000\004\014\032\001\002\000\004\015\020\001\002\000" +
-    "\004\012\015\001\002\000\004\017\016\001\002\000\004" +
-    "\014\017\001\002\000\020\002\ufffc\004\ufffc\005\ufffc\006" +
-    "\ufffc\007\ufffc\010\ufffc\011\ufffc\001\002\000\004\020\021" +
-    "\001\002\000\004\013\022\001\002\000\004\020\023\001" +
-    "\002\000\004\013\024\001\002\000\004\020\025\001\002" +
-    "\000\004\013\026\001\002\000\004\020\027\001\002\000" +
-    "\004\016\030\001\002\000\004\014\031\001\002\000\020" +
-    "\002\ufff9\004\ufff9\005\ufff9\006\ufff9\007\ufff9\010\ufff9\011" +
-    "\ufff9\001\002\000\020\002\ufffd\004\ufffd\005\ufffd\006\ufffd" +
-    "\007\ufffd\010\ufffd\011\ufffd\001\002\000\020\002\ufffe\004" +
-    "\ufffe\005\ufffe\006\ufffe\007\ufffe\010\ufffe\011\ufffe\001\002" +
-    "\000\004\020\035\001\002\000\004\013\036\001\002\000" +
-    "\004\020\037\001\002\000\004\016\040\001\002\000\004" +
-    "\014\041\001\002\000\020\002\ufffa\004\ufffa\005\ufffa\006" +
-    "\ufffa\007\ufffa\010\ufffa\011\ufffa\001\002\000\004\015\043" +
-    "\001\002\000\004\020\044\001\002\000\004\013\045\001" +
-    "\002\000\004\020\046\001\002\000\004\016\047\001\002" +
-    "\000\004\014\050\001\002\000\020\002\ufffb\004\ufffb\005" +
-    "\ufffb\006\ufffb\007\ufffb\010\ufffb\011\ufffb\001\002\000\004" +
-    "\020\052\001\002\000\004\013\053\001\002\000\004\020" +
-    "\054\001\002\000\004\013\055\001\002\000\004\020\056" +
-    "\001\002\000\004\016\057\001\002\000\004\014\060\001" +
-    "\002\000\020\002\ufff8\004\ufff8\005\ufff8\006\ufff8\007\ufff8" +
-    "\010\ufff8\011\ufff8\001\002\000\004\002\001\001\002" });
+    "\000\134\000\020\003\013\005\012\006\015\007\006\010" +
+    "\007\011\014\012\005\001\002\000\004\002\136\001\002" +
+    "\000\004\016\126\001\002\000\006\003\062\013\063\001" +
+    "\002\000\004\016\054\001\002\000\022\002\000\003\013" +
+    "\005\012\006\015\007\006\010\007\011\014\012\005\001" +
+    "\002\000\022\002\uffff\003\uffff\005\uffff\006\uffff\007\uffff" +
+    "\010\uffff\011\uffff\012\uffff\001\002\000\004\015\052\001" +
+    "\002\000\004\013\041\001\002\000\004\016\027\001\002" +
+    "\000\006\003\016\013\017\001\002\000\004\004\025\001" +
+    "\002\000\006\003\020\004\021\001\002\000\004\015\024" +
+    "\001\002\000\006\003\022\015\023\001\002\000\022\002" +
+    "\ufff8\003\ufff8\005\ufff8\006\ufff8\007\ufff8\010\ufff8\011\ufff8" +
+    "\012\ufff8\001\002\000\022\002\ufffc\003\ufffc\005\ufffc\006" +
+    "\ufffc\007\ufffc\010\ufffc\011\ufffc\012\ufffc\001\002\000\022" +
+    "\002\ufff9\003\ufff9\005\ufff9\006\ufff9\007\ufff9\010\ufff9\011" +
+    "\ufff9\012\ufff9\001\002\000\004\015\026\001\002\000\022" +
+    "\002\ufffa\003\ufffa\005\ufffa\006\ufffa\007\ufffa\010\ufffa\011" +
+    "\ufffa\012\ufffa\001\002\000\004\020\030\001\002\000\004" +
+    "\014\031\001\002\000\004\020\032\001\002\000\004\014" +
+    "\033\001\002\000\004\020\034\001\002\000\004\014\035" +
+    "\001\002\000\004\020\036\001\002\000\004\017\037\001" +
+    "\002\000\004\015\040\001\002\000\022\002\uffe9\003\uffe9" +
+    "\005\uffe9\006\uffe9\007\uffe9\010\uffe9\011\uffe9\012\uffe9\001" +
+    "\002\000\006\004\043\016\042\001\002\000\004\020\045" +
+    "\001\002\000\004\015\044\001\002\000\022\002\ufffb\003" +
+    "\ufffb\005\ufffb\006\ufffb\007\ufffb\010\ufffb\011\ufffb\012\ufffb" +
+    "\001\002\000\004\014\046\001\002\000\004\020\047\001" +
+    "\002\000\004\017\050\001\002\000\004\015\051\001\002" +
+    "\000\022\002\ufff6\003\ufff6\005\ufff6\006\ufff6\007\ufff6\010" +
+    "\ufff6\011\ufff6\012\ufff6\001\002\000\022\002\ufffd\003\ufffd" +
+    "\005\ufffd\006\ufffd\007\ufffd\010\ufffd\011\ufffd\012\ufffd\001" +
+    "\002\000\022\002\ufffe\003\ufffe\005\ufffe\006\ufffe\007\ufffe" +
+    "\010\ufffe\011\ufffe\012\ufffe\001\002\000\004\020\055\001" +
+    "\002\000\004\014\056\001\002\000\004\020\057\001\002" +
+    "\000\004\017\060\001\002\000\004\015\061\001\002\000" +
+    "\022\002\uffea\003\uffea\005\uffea\006\uffea\007\uffea\010\uffea" +
+    "\011\uffea\012\uffea\001\002\000\004\016\120\001\002\000" +
+    "\006\003\065\016\064\001\002\000\006\003\075\020\074" +
+    "\001\002\000\026\002\uffec\003\uffec\005\uffec\006\uffec\007" +
+    "\uffec\010\uffec\011\uffec\012\uffec\015\067\020\066\001\002" +
+    "\000\004\014\070\001\002\000\022\002\uffeb\003\uffeb\005" +
+    "\uffeb\006\uffeb\007\uffeb\010\uffeb\011\uffeb\012\uffeb\001\002" +
+    "\000\004\020\071\001\002\000\004\017\072\001\002\000" +
+    "\004\015\073\001\002\000\022\002\ufff4\003\ufff4\005\ufff4" +
+    "\006\ufff4\007\ufff4\010\ufff4\011\ufff4\012\ufff4\001\002\000" +
+    "\006\003\103\014\102\001\002\000\024\002\uffed\003\uffed" +
+    "\005\uffed\006\uffed\007\uffed\010\uffed\011\uffed\012\uffed\014" +
+    "\076\001\002\000\004\020\077\001\002\000\004\017\100" +
+    "\001\002\000\004\015\101\001\002\000\022\002\ufff3\003" +
+    "\ufff3\005\ufff3\006\ufff3\007\ufff3\010\ufff3\011\ufff3\012\ufff3" +
+    "\001\002\000\006\003\110\020\107\001\002\000\004\020" +
+    "\104\001\002\000\004\017\105\001\002\000\004\015\106" +
+    "\001\002\000\022\002\ufff2\003\ufff2\005\ufff2\006\ufff2\007" +
+    "\ufff2\010\ufff2\011\ufff2\012\ufff2\001\002\000\006\003\113" +
+    "\017\114\001\002\000\024\002\uffee\003\uffee\005\uffee\006" +
+    "\uffee\007\uffee\010\uffee\011\uffee\012\uffee\017\111\001\002" +
+    "\000\004\015\112\001\002\000\022\002\ufff1\003\ufff1\005" +
+    "\ufff1\006\ufff1\007\ufff1\010\ufff1\011\ufff1\012\ufff1\001\002" +
+    "\000\004\015\117\001\002\000\006\003\115\015\116\001" +
+    "\002\000\022\002\uffef\003\uffef\005\uffef\006\uffef\007\uffef" +
+    "\010\uffef\011\uffef\012\uffef\001\002\000\022\002\ufff7\003" +
+    "\ufff7\005\ufff7\006\ufff7\007\ufff7\010\ufff7\011\ufff7\012\ufff7" +
+    "\001\002\000\022\002\ufff0\003\ufff0\005\ufff0\006\ufff0\007" +
+    "\ufff0\010\ufff0\011\ufff0\012\ufff0\001\002\000\004\020\121" +
+    "\001\002\000\004\014\122\001\002\000\004\020\123\001" +
+    "\002\000\004\017\124\001\002\000\004\015\125\001\002" +
+    "\000\022\002\ufff5\003\ufff5\005\ufff5\006\ufff5\007\ufff5\010" +
+    "\ufff5\011\ufff5\012\ufff5\001\002\000\004\020\127\001\002" +
+    "\000\004\014\130\001\002\000\004\020\131\001\002\000" +
+    "\004\014\132\001\002\000\004\020\133\001\002\000\004" +
+    "\017\134\001\002\000\004\015\135\001\002\000\022\002" +
+    "\uffe8\003\uffe8\005\uffe8\006\uffe8\007\uffe8\010\uffe8\011\uffe8" +
+    "\012\uffe8\001\002\000\004\002\001\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -81,9 +127,17 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\057\000\010\002\003\003\007\004\010\001\001\000" +
+    "\000\134\000\010\002\003\003\007\004\010\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\004\032\001\001\000\002\001\001\000" +
+    "\001\001\000\004\004\052\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
@@ -96,7 +150,13 @@ public class parser extends java_cup.runtime.lr_parser {
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001" });
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -135,49 +195,46 @@ public class parser extends java_cup.runtime.lr_parser {
 
 
 
-    public String resultado="";
+    public String resultado = "";
     public static LinkedList<TError> TablaES = new LinkedList<TError>();
+    public static LinkedList<String> comandos = new LinkedList<>();
 
-    public void syntax_error(Symbol s)
-    {
-        String lexema = s.value.toString();
-        int fila = s.right;
-        int columna = s.left;
+    private boolean errorRecuperado = false;
 
-        System.out.println("!Error Sintactico Recuperado!");
-        System.out.println("\t\tLexema: "+lexema);
-        System.out.println("\t\tFila: "+fila);
-        System.out.println("\t\tColumna: "+columna);
+    private String mensajeErrorPersonalizado = null;
 
-        TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
-        TablaES.add(datos);
+    public void syntax_error(Symbol s) {
+        if (errorRecuperado) {
+            errorRecuperado = false;
+            return;
+        }
+
+        if (s == null) return;
+
 
     }
 
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
-    {
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception {
+        if (s == null || s.value == null) return;
+
         String lexema = s.value.toString();
-        int fila = s.right;
-        int columna = s.left;
+        int fila = (s.left >= 0) ? s.left + 1 : -1;
+        int columna = (s.right >= 0) ? s.right + 1 : -1;
 
-        System.out.println("!Error Sintactico no2!");
-        System.out.println("\t\tLexema: "+lexema);
-        System.out.println("\t\tFila: "+fila);
-        System.out.println("\t\tColumna: "+columna);
+        TablaES.add(new TError(lexema, fila, columna, "Error Sintáctico", "Caracter no esperado (no recuperable)"));
+    }
 
-         TError datos = new TError(lexema,fila,columna,"Error Sintactico","Caracter no esperado");
-        TablaES.add(datos);
-
+    public void registrarError(Symbol sym, String descripcion) {
+        int fila = (sym != null && sym.left >= 0) ? sym.left + 1 : -1;
+        int columna = (sym != null && sym.right >= 0) ? sym.right + 1 : -1;
+        String lexema = (sym != null && sym.value != null) ? sym.value.toString() : "EOF";
+        TablaES.add(new TError(lexema, fila, columna, "Error Sintáctico", descripcion));
     }
 
 
-
-  /** Cup generated class to encapsulate user supplied action code.*/
+/** Cup generated class to encapsulate user supplied action code.*/
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 class CUP$parser$actions {
-
-
-
   private final parser parser;
 
   /** Constructor */
@@ -253,13 +310,60 @@ class CUP$parser$actions {
           case 5: // instruccion ::= F IGUAL C PUNTOCOMA 
             {
               Object RESULT =null;
-
+		
+            String colorTexto = (String)((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 1)).value;
+            ComandoGlobal.comandos.add("f," + colorTexto);
+        
               CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 6: // instruccion ::= error IGUAL C PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 1);
+                   registrarError(sym, "Falta el identificador de instrucción (limpiar)"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 7: // instruccion ::= F error C PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                       Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
+                       registrarError(sym, "Falta el identificador de instrucción (=)"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 8: // instruccion ::= F IGUAL error PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                       Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
+                       registrarError(sym, "Falta el identificador de instrucción (color)"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 9: // instruccion ::= F IGUAL C error 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                       Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                       registrarError(sym, "Falta el identificador de instrucción (;)"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 10: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
             {
               Object RESULT =null;
 
@@ -268,7 +372,139 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // instruccion ::= Rec PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 11: // instruccion ::= error IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
+           registrarError(sym, "Falta el identificador de instrucción (Ps)"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 12: // instruccion ::= Ps error PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 1);
+           registrarError(sym, "Falta un '='"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 13: // instruccion ::= Ps IGUAL error NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
+           registrarError(sym, "Falta un '('"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 14: // instruccion ::= Ps IGUAL PAR_ABRE error COMA NUM PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 3);
+           registrarError(sym, "Falta el primer número"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 15: // instruccion ::= Ps IGUAL PAR_ABRE NUM error NUM PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 4);
+           registrarError(sym, "Falta una coma ',' entre los parámetros"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 16: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA error PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 5);
+           registrarError(sym, "Falta el segundo número"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 17: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA NUM error PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 6);
+           registrarError(sym, "Falta un ')'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 18: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA error 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 7);
+           registrarError(sym, "Falta un ';'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 19: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA error 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 6 + 5);
+           registrarError(sym, "Falta un segundo número y cierre de paréntesis"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 20: // instruccion ::= Ps IGUAL PAR_ABRE error 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
+           registrarError(sym, "Paréntesis sin parámetros"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 21: // instruccion ::= Ps IGUAL error 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 3 + 2);
+           registrarError(sym, "Falta paréntesis y parámetros"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 22: // instruccion ::= Ps IGUAL error PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
+           registrarError(sym, "Falta paréntesis con parámetros"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 23: // instruccion ::= Rec PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
             {
               Object RESULT =null;
 
@@ -277,7 +513,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // instruccion ::= Ln PAR_ABRE NUM COMA NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 24: // instruccion ::= Ln PAR_ABRE NUM COMA NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA 
             {
               Object RESULT =null;
 
@@ -286,7 +522,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // instruccion ::= Cir PAR_ABRE NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 25: // instruccion ::= Cir PAR_ABRE NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA 
             {
               Object RESULT =null;
 

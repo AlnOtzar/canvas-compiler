@@ -1,14 +1,14 @@
 package unam.aragon.mx;
-import java_cup.runtime.*;
+
+import java_cup.runtime.Symbol;
 import java.util.LinkedList;
 
 %%
 
 %public
 %class Analizador_Lexico
-%cupsym Simbolos
+%cupsym sym
 %cup
-%implements java_cup.runtime.Scanner
 %line
 %char
 %column
@@ -19,6 +19,7 @@ import java.util.LinkedList;
     public static LinkedList<TError> TablaEL = new LinkedList<TError>();
 
     private Symbol symbol(int type, Object value) {
+        // Guardamos línea en 'left' y columna en 'right'
         return new Symbol(type, yyline, yycolumn, value);
     }
 
@@ -26,7 +27,6 @@ import java.util.LinkedList;
         return new Symbol(type, yyline, yycolumn);
     }
 %}
-
 
 %eof{
     return new java_cup.runtime.Symbol(sym.EOF);
@@ -51,6 +51,9 @@ import java.util.LinkedList;
 "red"               { return symbol(sym.C, yytext()); }
 "blue"              { return symbol(sym.C, yytext()); }
 "green"             { return symbol(sym.C, yytext()); }
+"yellow"             { return symbol(sym.C, yytext()); }
+"white"             { return symbol(sym.C, yytext()); }
+"orange"             { return symbol(sym.C, yytext()); }
 
 // Números
 [0-9]+              { return symbol(sym.NUM, Integer.parseInt(yytext())); }
@@ -58,8 +61,13 @@ import java.util.LinkedList;
 // Fin de línea
 [\n]+               { /* Ignorar líneas vacías */ }
 
-// Espacios
-[ \t\r]+            { /* Ignorar espacios */ }
+// Espacios y tabuladores
+[ \t\r]+            { /* Ignorar espacios y tabs */ }
 
 // Caracter no reconocido
-.                   { System.err.println("Caracter no reconocido: " + yytext()); return null; }
+.                   {
+                        System.err.println("Caracter no reconocido: " + yytext() + " en línea " + (yyline+1) + " columna " + (yycolumn+1));
+                        // Puedes agregar error a la tabla si quieres:
+                        TablaEL.add(new TError(yytext(), yyline+1, yycolumn+1, "Error Léxico", "Caracter no reconocido"));
+                        return null;
+                    }
