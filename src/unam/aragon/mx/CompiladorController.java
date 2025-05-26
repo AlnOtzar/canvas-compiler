@@ -325,6 +325,8 @@ public class CompiladorController {
         if (indiceComandoc < ComandoGlobal.comandos.size()) {
             String comando = ComandoGlobal.comandos.get(indiceComandoc);
             String[] partes = comando.split(",");
+            System.out.println("Agregando comando: " + comando); // <- AQUÍ
+
             switch (partes[0]) {
                 case "lpr" -> limpiar = true;
                 case "f" -> {
@@ -335,11 +337,67 @@ public class CompiladorController {
                         System.out.println("Comando 'f' sin color");
                     }
                 }
+                case "ps" -> {
+                    if (partes.length >= 3) {
+                        try {
+                            x = Integer.parseInt(partes[1].trim());
+                            y = Integer.parseInt(partes[2].trim());
+                            posicionPunto = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error al convertir coordenadas en comando 'ps': " + e.getMessage());
+                        }
+                    } else {
+                        System.out.println("Comando 'ps' incompleto. Se esperaban dos parámetros: x, y");
+                    }
+                }
+                case "rec" -> {
+                    if (partes.length >= 4) {
+                        try {
+                            ancho = Integer.parseInt(partes[1].trim());
+                            alto = Integer.parseInt(partes[2].trim());
+                            fondoFigura = obtenerColor(partes[3].trim());
+                            rectanguloActivo = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error en comando 'rec': " + e.getMessage());
+                        }
+                    }
+                }
+                case "ln" -> {
+                    if (partes.length >= 3) {
+                        try {
+                            ancho = Integer.parseInt(partes[1].trim());  // destino x
+                            alto = Integer.parseInt(partes[2].trim());   // destino y
+                            colorFigura = (partes.length == 4) ? obtenerColor(partes[3].trim()) : Color.BLACK;
+                            lineaActiva = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error en comando 'ln': " + e.getMessage());
+                        }
+                    }
+                }
+                case "cir" -> {
+                    if (partes.length >= 3) {
+                        try {
+                            int radio = Integer.parseInt(partes[1].trim());
+                            ancho = radio * 2;
+                            alto = radio * 2;
+                            fondoFigura = obtenerColor(partes[2].trim());
+                            circuloActivo = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error en comando 'cir': " + e.getMessage());
+                        }
+                    }
+                }
+
+
+
+
+
                 // otros casos (ps, rec, etc) aquí...
             }
             indiceComandoc++;  // Avanza para la próxima llamada
         } else {
             System.out.println("No hay más comandos para procesar");
+            tiempo.stop();
         }
     }
 
@@ -365,6 +423,7 @@ public class CompiladorController {
                 pintar();
             }
         };
+
         tiempo.start();
     }
 

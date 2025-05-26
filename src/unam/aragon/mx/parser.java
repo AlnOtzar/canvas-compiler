@@ -31,15 +31,19 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\032\000\002\002\004\000\002\002\003\000\002\003" +
-    "\003\000\002\003\004\000\002\004\004\000\002\004\006" +
-    "\000\002\004\006\000\002\004\006\000\002\004\006\000" +
-    "\002\004\006\000\002\004\012\000\002\004\012\000\002" +
-    "\004\012\000\002\004\012\000\002\004\012\000\002\004" +
-    "\012\000\002\004\012\000\002\004\012\000\002\004\012" +
-    "\000\002\004\010\000\002\004\006\000\002\004\005\000" +
-    "\002\004\006\000\002\004\011\000\002\004\015\000\002" +
-    "\004\013" });
+    "\000\047\000\002\002\004\000\002\002\003\000\002\003" +
+    "\003\000\002\003\004\000\002\004\004\000\002\004\004" +
+    "\000\002\004\004\000\002\004\006\000\002\004\006\000" +
+    "\002\004\006\000\002\004\006\000\002\004\006\000\002" +
+    "\004\004\000\002\004\005\000\002\004\007\000\002\006" +
+    "\003\000\002\006\004\000\002\005\011\000\002\005\011" +
+    "\000\002\005\011\000\002\005\011\000\002\005\011\000" +
+    "\002\005\011\000\002\005\011\000\002\005\011\000\002" +
+    "\005\011\000\002\005\003\000\002\005\004\000\002\005" +
+    "\005\000\002\005\006\000\002\005\007\000\002\005\010" +
+    "\000\002\005\011\000\002\007\003\000\002\007\004\000" +
+    "\002\010\014\000\002\010\012\000\002\010\014\000\002" +
+    "\010\004" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -47,79 +51,74 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\134\000\020\003\013\005\012\006\015\007\006\010" +
-    "\007\011\014\012\005\001\002\000\004\002\136\001\002" +
-    "\000\004\016\126\001\002\000\006\003\062\013\063\001" +
-    "\002\000\004\016\054\001\002\000\022\002\000\003\013" +
-    "\005\012\006\015\007\006\010\007\011\014\012\005\001" +
-    "\002\000\022\002\uffff\003\uffff\005\uffff\006\uffff\007\uffff" +
-    "\010\uffff\011\uffff\012\uffff\001\002\000\004\015\052\001" +
-    "\002\000\004\013\041\001\002\000\004\016\027\001\002" +
-    "\000\006\003\016\013\017\001\002\000\004\004\025\001" +
-    "\002\000\006\003\020\004\021\001\002\000\004\015\024" +
-    "\001\002\000\006\003\022\015\023\001\002\000\022\002" +
-    "\ufff8\003\ufff8\005\ufff8\006\ufff8\007\ufff8\010\ufff8\011\ufff8" +
-    "\012\ufff8\001\002\000\022\002\ufffc\003\ufffc\005\ufffc\006" +
-    "\ufffc\007\ufffc\010\ufffc\011\ufffc\012\ufffc\001\002\000\022" +
-    "\002\ufff9\003\ufff9\005\ufff9\006\ufff9\007\ufff9\010\ufff9\011" +
-    "\ufff9\012\ufff9\001\002\000\004\015\026\001\002\000\022" +
-    "\002\ufffa\003\ufffa\005\ufffa\006\ufffa\007\ufffa\010\ufffa\011" +
-    "\ufffa\012\ufffa\001\002\000\004\020\030\001\002\000\004" +
-    "\014\031\001\002\000\004\020\032\001\002\000\004\014" +
-    "\033\001\002\000\004\020\034\001\002\000\004\014\035" +
-    "\001\002\000\004\020\036\001\002\000\004\017\037\001" +
-    "\002\000\004\015\040\001\002\000\022\002\uffe9\003\uffe9" +
-    "\005\uffe9\006\uffe9\007\uffe9\010\uffe9\011\uffe9\012\uffe9\001" +
-    "\002\000\006\004\043\016\042\001\002\000\004\020\045" +
-    "\001\002\000\004\015\044\001\002\000\022\002\ufffb\003" +
-    "\ufffb\005\ufffb\006\ufffb\007\ufffb\010\ufffb\011\ufffb\012\ufffb" +
-    "\001\002\000\004\014\046\001\002\000\004\020\047\001" +
-    "\002\000\004\017\050\001\002\000\004\015\051\001\002" +
-    "\000\022\002\ufff6\003\ufff6\005\ufff6\006\ufff6\007\ufff6\010" +
-    "\ufff6\011\ufff6\012\ufff6\001\002\000\022\002\ufffd\003\ufffd" +
-    "\005\ufffd\006\ufffd\007\ufffd\010\ufffd\011\ufffd\012\ufffd\001" +
-    "\002\000\022\002\ufffe\003\ufffe\005\ufffe\006\ufffe\007\ufffe" +
-    "\010\ufffe\011\ufffe\012\ufffe\001\002\000\004\020\055\001" +
-    "\002\000\004\014\056\001\002\000\004\020\057\001\002" +
-    "\000\004\017\060\001\002\000\004\015\061\001\002\000" +
-    "\022\002\uffea\003\uffea\005\uffea\006\uffea\007\uffea\010\uffea" +
-    "\011\uffea\012\uffea\001\002\000\004\016\120\001\002\000" +
-    "\006\003\065\016\064\001\002\000\006\003\075\020\074" +
-    "\001\002\000\026\002\uffec\003\uffec\005\uffec\006\uffec\007" +
-    "\uffec\010\uffec\011\uffec\012\uffec\015\067\020\066\001\002" +
-    "\000\004\014\070\001\002\000\022\002\uffeb\003\uffeb\005" +
-    "\uffeb\006\uffeb\007\uffeb\010\uffeb\011\uffeb\012\uffeb\001\002" +
-    "\000\004\020\071\001\002\000\004\017\072\001\002\000" +
-    "\004\015\073\001\002\000\022\002\ufff4\003\ufff4\005\ufff4" +
-    "\006\ufff4\007\ufff4\010\ufff4\011\ufff4\012\ufff4\001\002\000" +
-    "\006\003\103\014\102\001\002\000\024\002\uffed\003\uffed" +
-    "\005\uffed\006\uffed\007\uffed\010\uffed\011\uffed\012\uffed\014" +
-    "\076\001\002\000\004\020\077\001\002\000\004\017\100" +
-    "\001\002\000\004\015\101\001\002\000\022\002\ufff3\003" +
-    "\ufff3\005\ufff3\006\ufff3\007\ufff3\010\ufff3\011\ufff3\012\ufff3" +
-    "\001\002\000\006\003\110\020\107\001\002\000\004\020" +
-    "\104\001\002\000\004\017\105\001\002\000\004\015\106" +
-    "\001\002\000\022\002\ufff2\003\ufff2\005\ufff2\006\ufff2\007" +
-    "\ufff2\010\ufff2\011\ufff2\012\ufff2\001\002\000\006\003\113" +
-    "\017\114\001\002\000\024\002\uffee\003\uffee\005\uffee\006" +
-    "\uffee\007\uffee\010\uffee\011\uffee\012\uffee\017\111\001\002" +
-    "\000\004\015\112\001\002\000\022\002\ufff1\003\ufff1\005" +
-    "\ufff1\006\ufff1\007\ufff1\010\ufff1\011\ufff1\012\ufff1\001\002" +
-    "\000\004\015\117\001\002\000\006\003\115\015\116\001" +
-    "\002\000\022\002\uffef\003\uffef\005\uffef\006\uffef\007\uffef" +
-    "\010\uffef\011\uffef\012\uffef\001\002\000\022\002\ufff7\003" +
-    "\ufff7\005\ufff7\006\ufff7\007\ufff7\010\ufff7\011\ufff7\012\ufff7" +
-    "\001\002\000\022\002\ufff0\003\ufff0\005\ufff0\006\ufff0\007" +
-    "\ufff0\010\ufff0\011\ufff0\012\ufff0\001\002\000\004\020\121" +
-    "\001\002\000\004\014\122\001\002\000\004\020\123\001" +
-    "\002\000\004\017\124\001\002\000\004\015\125\001\002" +
-    "\000\022\002\ufff5\003\ufff5\005\ufff5\006\ufff5\007\ufff5\010" +
-    "\ufff5\011\ufff5\012\ufff5\001\002\000\004\020\127\001\002" +
-    "\000\004\014\130\001\002\000\004\020\131\001\002\000" +
-    "\004\014\132\001\002\000\004\020\133\001\002\000\004" +
-    "\017\134\001\002\000\004\015\135\001\002\000\022\002" +
-    "\uffe8\003\uffe8\005\uffe8\006\uffe8\007\uffe8\010\uffe8\011\uffe8" +
-    "\012\uffe8\001\002\000\004\002\001\001\002" });
+    "\000\140\000\012\003\010\005\007\006\011\007\004\001" +
+    "\002\000\006\003\034\013\035\001\002\000\014\002\000" +
+    "\003\010\005\007\006\011\007\004\001\002\000\004\002" +
+    "\032\001\002\000\006\003\030\015\031\001\002\000\006" +
+    "\013\024\015\025\001\002\000\006\003\013\013\014\001" +
+    "\002\000\014\002\uffff\003\uffff\005\uffff\006\uffff\007\uffff" +
+    "\001\002\000\016\002\ufff5\003\ufff5\004\022\005\ufff5\006" +
+    "\ufff5\007\ufff5\001\002\000\006\003\015\004\016\001\002" +
+    "\000\016\002\ufff4\003\ufff4\005\ufff4\006\ufff4\007\ufff4\015" +
+    "\021\001\002\000\006\003\017\015\020\001\002\000\014" +
+    "\002\ufff6\003\ufff6\005\ufff6\006\ufff6\007\ufff6\001\002\000" +
+    "\014\002\ufffa\003\ufffa\005\ufffa\006\ufffa\007\ufffa\001\002" +
+    "\000\014\002\ufff7\003\ufff7\005\ufff7\006\ufff7\007\ufff7\001" +
+    "\002\000\004\015\023\001\002\000\014\002\ufff8\003\ufff8" +
+    "\005\ufff8\006\ufff8\007\ufff8\001\002\000\004\004\026\001" +
+    "\002\000\014\002\ufffc\003\ufffc\005\ufffc\006\ufffc\007\ufffc" +
+    "\001\002\000\004\015\027\001\002\000\014\002\ufff9\003" +
+    "\ufff9\005\ufff9\006\ufff9\007\ufff9\001\002\000\014\002\ufffb" +
+    "\003\ufffb\005\ufffb\006\ufffb\007\ufffb\001\002\000\014\002" +
+    "\ufffd\003\ufffd\005\ufffd\006\ufffd\007\ufffd\001\002\000\004" +
+    "\002\001\001\002\000\014\002\ufffe\003\ufffe\005\ufffe\006" +
+    "\ufffe\007\ufffe\001\002\000\004\016\135\001\002\000\016" +
+    "\003\103\005\uffe7\010\uffe7\011\uffe7\012\uffe7\016\102\001" +
+    "\002\000\012\005\040\010\042\011\044\012\037\001\002" +
+    "\000\004\013\073\001\002\000\004\015\072\001\002\000" +
+    "\014\005\uffe0\010\uffe0\011\uffe0\012\uffe0\020\uffe0\001\002" +
+    "\000\004\013\061\001\002\000\014\005\040\010\042\011" +
+    "\044\012\037\020\056\001\002\000\004\013\045\001\002" +
+    "\000\004\016\046\001\002\000\004\022\047\001\002\000" +
+    "\004\014\050\001\002\000\004\022\051\001\002\000\004" +
+    "\014\052\001\002\000\004\004\053\001\002\000\004\017" +
+    "\054\001\002\000\004\015\055\001\002\000\014\005\uffdc" +
+    "\010\uffdc\011\uffdc\012\uffdc\020\uffdc\001\002\000\004\015" +
+    "\060\001\002\000\014\005\uffdf\010\uffdf\011\uffdf\012\uffdf" +
+    "\020\uffdf\001\002\000\014\002\ufff3\003\ufff3\005\ufff3\006" +
+    "\ufff3\007\ufff3\001\002\000\004\016\062\001\002\000\004" +
+    "\022\063\001\002\000\004\014\064\001\002\000\004\022" +
+    "\065\001\002\000\004\014\066\001\002\000\004\004\067" +
+    "\001\002\000\004\017\070\001\002\000\004\015\071\001" +
+    "\002\000\014\005\uffde\010\uffde\011\uffde\012\uffde\020\uffde" +
+    "\001\002\000\014\005\uffdb\010\uffdb\011\uffdb\012\uffdb\020" +
+    "\uffdb\001\002\000\004\016\074\001\002\000\004\022\075" +
+    "\001\002\000\004\014\076\001\002\000\004\004\077\001" +
+    "\002\000\004\017\100\001\002\000\004\015\101\001\002" +
+    "\000\014\005\uffdd\010\uffdd\011\uffdd\012\uffdd\020\uffdd\001" +
+    "\002\000\016\003\112\005\uffe6\010\uffe6\011\uffe6\012\uffe6" +
+    "\022\111\001\002\000\004\022\104\001\002\000\004\014" +
+    "\105\001\002\000\004\022\106\001\002\000\004\017\107" +
+    "\001\002\000\004\021\110\001\002\000\012\005\uffed\010" +
+    "\uffed\011\uffed\012\uffed\001\002\000\016\003\120\005\uffe5" +
+    "\010\uffe5\011\uffe5\012\uffe5\014\117\001\002\000\004\014" +
+    "\113\001\002\000\004\022\114\001\002\000\004\017\115" +
+    "\001\002\000\004\021\116\001\002\000\012\005\uffec\010" +
+    "\uffec\011\uffec\012\uffec\001\002\000\016\003\125\005\uffe4" +
+    "\010\uffe4\011\uffe4\012\uffe4\022\124\001\002\000\004\022" +
+    "\121\001\002\000\004\017\122\001\002\000\004\021\123" +
+    "\001\002\000\012\005\uffeb\010\uffeb\011\uffeb\012\uffeb\001" +
+    "\002\000\016\003\130\005\uffe3\010\uffe3\011\uffe3\012\uffe3" +
+    "\017\131\001\002\000\004\017\126\001\002\000\004\021" +
+    "\127\001\002\000\012\005\uffea\010\uffea\011\uffea\012\uffea" +
+    "\001\002\000\004\021\134\001\002\000\016\003\132\005" +
+    "\uffe2\010\uffe2\011\uffe2\012\uffe2\021\133\001\002\000\012" +
+    "\005\uffe8\010\uffe8\011\uffe8\012\uffe8\001\002\000\012\005" +
+    "\ufff0\010\ufff0\011\ufff0\012\ufff0\001\002\000\012\005\uffe9" +
+    "\010\uffe9\011\uffe9\012\uffe9\001\002\000\004\022\136\001" +
+    "\002\000\004\014\137\001\002\000\004\022\140\001\002" +
+    "\000\004\017\141\001\002\000\004\021\142\001\002\000" +
+    "\012\005\uffee\010\uffee\011\uffee\012\uffee\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -127,10 +126,18 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\134\000\010\002\003\003\007\004\010\001\001\000" +
+    "\000\140\000\010\002\005\003\004\004\011\001\001\000" +
+    "\004\005\035\001\001\000\004\004\032\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\004\052\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\006\007\042\010\040\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\004\010\056\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
@@ -149,14 +156,7 @@ public class parser extends java_cup.runtime.lr_parser {
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001" });
+    "\000\002\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -301,13 +301,37 @@ class CUP$parser$actions {
           case 4: // instruccion ::= Lpr PUNTOCOMA 
             {
               Object RESULT =null;
-
+		 errorRecuperado = true;
+                                 Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
+                                 ComandoGlobal.comandos.add("lpr");
               CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // instruccion ::= F IGUAL C PUNTOCOMA 
+          case 5: // instruccion ::= error PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
+                           registrarError(sym, "Falta el identificador de instrucción (limpiar)");
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // instruccion ::= Lpr error 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 2);
+                               registrarError(sym, "Falta el identificador de instrucción (;)"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 7: // instruccion ::= F IGUAL C PUNTOCOMA 
             {
               Object RESULT =null;
 		
@@ -319,7 +343,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // instruccion ::= error IGUAL C PUNTOCOMA 
+          case 8: // instruccion ::= error IGUAL C PUNTOCOMA 
             {
               Object RESULT =null;
 		 errorRecuperado = true;
@@ -330,7 +354,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // instruccion ::= F error C PUNTOCOMA 
+          case 9: // instruccion ::= F error C PUNTOCOMA 
             {
               Object RESULT =null;
 		 errorRecuperado = true;
@@ -341,7 +365,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // instruccion ::= F IGUAL error PUNTOCOMA 
+          case 10: // instruccion ::= F IGUAL error PUNTOCOMA 
             {
               Object RESULT =null;
 		 errorRecuperado = true;
@@ -352,7 +376,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // instruccion ::= F IGUAL C error 
+          case 11: // instruccion ::= F IGUAL C error 
             {
               Object RESULT =null;
 		 errorRecuperado = true;
@@ -363,170 +387,299 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 12: // instruccion ::= F error 
             {
               Object RESULT =null;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+		 errorRecuperado = true;
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
+                           registrarError(sym, "Faltan los identificadores de instrucciónes ( =, color , ; )"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // instruccion ::= error IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 13: // instruccion ::= F IGUAL error 
             {
               Object RESULT =null;
 		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
-           registrarError(sym, "Falta el identificador de instrucción (Ps)"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // instruccion ::= Ps error PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 1);
-           registrarError(sym, "Falta un '='"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // instruccion ::= Ps IGUAL error NUM COMA NUM PAR_CIERRA PUNTOCOMA 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
-           registrarError(sym, "Falta un '('"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // instruccion ::= Ps IGUAL PAR_ABRE error COMA NUM PAR_CIERRA PUNTOCOMA 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 3);
-           registrarError(sym, "Falta el primer número"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // instruccion ::= Ps IGUAL PAR_ABRE NUM error NUM PAR_CIERRA PUNTOCOMA 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 4);
-           registrarError(sym, "Falta una coma ',' entre los parámetros"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA error PAR_CIERRA PUNTOCOMA 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 5);
-           registrarError(sym, "Falta el segundo número"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA NUM error PUNTOCOMA 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 6);
-           registrarError(sym, "Falta un ')'"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA error 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 7);
-           registrarError(sym, "Falta un ';'"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // instruccion ::= Ps IGUAL PAR_ABRE NUM COMA error 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 6 + 5);
-           registrarError(sym, "Falta un segundo número y cierre de paréntesis"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // instruccion ::= Ps IGUAL PAR_ABRE error 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
-           registrarError(sym, "Paréntesis sin parámetros"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
-            }
-          return CUP$parser$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // instruccion ::= Ps IGUAL error 
-            {
-              Object RESULT =null;
-		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 3 + 2);
-           registrarError(sym, "Falta paréntesis y parámetros"); 
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
+                           registrarError(sym, "Faltan los identificadores de instrucciónes ( color , ; )"); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // instruccion ::= Ps IGUAL error PUNTOCOMA 
+          case 14: // instruccion ::= Ps encabezado figuras LLAVE_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 15: // encabezados ::= encabezado 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezados",4, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 16: // encabezados ::= encabezados encabezado 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezados",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 17: // encabezado ::= IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE 
+            {
+              Object RESULT =null;
+		
+            int px = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+            int py = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 2)).value.toString());
+            ComandoGlobal.comandos.add("ps," + px + "," + py);
+        
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 18: // encabezado ::= IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE 
             {
               Object RESULT =null;
 		 errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
-           registrarError(sym, "Falta paréntesis con parámetros"); 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 1);
+           registrarError(sym, "Falta el identificador de instrucción (Ps)"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // instruccion ::= Rec PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 19: // encabezado ::= error PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE 
             {
               Object RESULT =null;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
+           registrarError(sym, "Falta un '='"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // instruccion ::= Ln PAR_ABRE NUM COMA NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 20: // encabezado ::= IGUAL error NUM COMA NUM PAR_CIERRA LLAVE_ABRE 
             {
               Object RESULT =null;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-10)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 3);
+           registrarError(sym, "Falta un '('"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // instruccion ::= Cir PAR_ABRE NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA 
+          case 21: // encabezado ::= IGUAL PAR_ABRE error COMA NUM PAR_CIERRA LLAVE_ABRE 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 4);
+           registrarError(sym, "Falta el primer número"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 22: // encabezado ::= IGUAL PAR_ABRE NUM error NUM PAR_CIERRA LLAVE_ABRE 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 5);
+           registrarError(sym, "Falta una coma ',' entre los parámetros"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 23: // encabezado ::= IGUAL PAR_ABRE NUM COMA error PAR_CIERRA LLAVE_ABRE 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 6);
+               registrarError(sym, "Falta un '{'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 24: // encabezado ::= IGUAL PAR_ABRE NUM COMA NUM error LLAVE_ABRE 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 7);
+                   registrarError(sym, "Falta un '{'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 25: // encabezado ::= IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA error 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 8);
+                   registrarError(sym, "Falta un '{'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 26: // encabezado ::= IGUAL 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 1 + 1);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 27: // encabezado ::= IGUAL PAR_ABRE 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 2);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 28: // encabezado ::= IGUAL PAR_ABRE NUM 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 3 + 3);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 29: // encabezado ::= IGUAL PAR_ABRE NUM COMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 30: // encabezado ::= IGUAL PAR_ABRE NUM COMA NUM 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 5 + 6);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 31: // encabezado ::= IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 6 + 6);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-5)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 32: // encabezado ::= IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 7);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); 
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("encabezado",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 33: // figuras ::= figura 
             {
               Object RESULT =null;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("instruccion",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-8)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("figuras",5, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 34: // figuras ::= figuras figura 
+            {
+              Object RESULT =null;
+
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("figuras",5, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 35: // figura ::= Rec IGUAL PAR_ABRE NUM COMA NUM COMA C PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		
+        int ancho = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 6)).value.toString());
+        int alto = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+        String col = ((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 2)).value.toString();
+        ComandoGlobal.comandos.add("rec," + ancho + "," + alto + "," + col);
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("figura",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-9)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 36: // figura ::= Cir IGUAL PAR_ABRE NUM COMA C PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		
+        int radio = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+        String col = ((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 2)).value.toString();
+        ComandoGlobal.comandos.add("cir," + radio + "," + col);
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("figura",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-7)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 37: // figura ::= Ln IGUAL PAR_ABRE NUM COMA NUM COMA C PAR_CIERRA PUNTOCOMA 
+            {
+              Object RESULT =null;
+		
+        int x2 = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 6)).value.toString());
+        int y2 = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+        String col = ((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 3)).value.toString();
+        ComandoGlobal.comandos.add("ln," + x2 + "," + y2 + "," + col);
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("figura",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-9)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 38: // figura ::= Lpr PUNTOCOMA 
+            {
+              Object RESULT =null;
+		 errorRecuperado = true;
+        Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
+        ComandoGlobal.comandos.add("lpr");
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("figura",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 

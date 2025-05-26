@@ -4,7 +4,6 @@ import java_cup.runtime.Symbol;
 import java.util.LinkedList;
 import unam.aragon.mx.ComandoGlobal;
 
-
 parser code
 {:
     public String resultado = "";
@@ -44,17 +43,19 @@ parser code
     }
 :}
 
+
+
 terminal String C;
 terminal
     Lpr, F, Ps, Rec, Ln, Cir,
-    IGUAL, COMA, PUNTOCOMA, PAR_ABRE, PAR_CIERRA,
+    IGUAL, COMA, PUNTOCOMA, PAR_ABRE, PAR_CIERRA, LLAVE_CIERRA, LLAVE_ABRE,
     NUM;
 
-non terminal programa, instrucciones, instruccion;
-non terminal String color;
+non terminal programa, instrucciones, instruccion, encabezado,encabezados, figuras, figura ;
 
 
 start with programa;
+
 
 programa ::= instrucciones;
 
@@ -63,16 +64,17 @@ instrucciones ::= instruccion
 
 instruccion ::=
       Lpr PUNTOCOMA
+      {: errorRecuperado = true;
+                                 Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
+                                 ComandoGlobal.comandos.add("lpr");:}
     | error PUNTOCOMA
         {: errorRecuperado = true;
                            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
-                           registrarError(sym, "Falta el identificador de instrucción (;)");
-                            ComandoGlobal.comando.add("lpr");:}
+                           registrarError(sym, "Falta el identificador de instrucción (limpiar)");:}
     | Lpr error
             {: errorRecuperado = true;
                                Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 2);
                                registrarError(sym, "Falta el identificador de instrucción (;)"); :}
-
 
     | F IGUAL C PUNTOCOMA
         {:
@@ -97,78 +99,121 @@ instruccion ::=
                        registrarError(sym, "Falta el identificador de instrucción (;)"); :}
     | F error
             {: errorRecuperado = true;
-                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
                            registrarError(sym, "Faltan los identificadores de instrucciónes ( =, color , ; )"); :}
     | F IGUAL error
             {: errorRecuperado = true;
-                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
                            registrarError(sym, "Faltan los identificadores de instrucciónes ( color , ; )"); :}
+   | Ps encabezado figuras LLAVE_CIERRA PUNTOCOMA;
 
-
-    | Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
-    | error IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
-        {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
-           registrarError(sym, "Falta el identificador de instrucción (Ps)"); :}
-
-    | Ps error PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
+encabezados ::=
+    encabezado
+    | encabezados encabezado;
+encabezado ::=
+     IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE
+        {:
+            int px = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+            int py = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 2)).value.toString());
+            ComandoGlobal.comandos.add("ps," + px + "," + py);
+        :}
+    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 1);
-           registrarError(sym, "Falta un '='"); :}
+           registrarError(sym, "Falta el identificador de instrucción (Ps)"); :}
 
-    | Ps IGUAL error NUM COMA NUM PAR_CIERRA PUNTOCOMA
+    |error PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 2);
-           registrarError(sym, "Falta un '('"); :}
+           registrarError(sym, "Falta un '='"); :}
 
-    | Ps IGUAL PAR_ABRE error COMA NUM PAR_CIERRA PUNTOCOMA
+    |IGUAL error NUM COMA NUM PAR_CIERRA LLAVE_ABRE
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 3);
-           registrarError(sym, "Falta el primer número"); :}
+           registrarError(sym, "Falta un '('"); :}
 
-    | Ps IGUAL PAR_ABRE NUM error NUM PAR_CIERRA PUNTOCOMA
+    |IGUAL PAR_ABRE error COMA NUM PAR_CIERRA LLAVE_ABRE
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 4);
-           registrarError(sym, "Falta una coma ',' entre los parámetros"); :}
+           registrarError(sym, "Falta el primer número"); :}
 
-    | Ps IGUAL PAR_ABRE NUM COMA error PAR_CIERRA PUNTOCOMA
+    |IGUAL PAR_ABRE NUM error NUM PAR_CIERRA LLAVE_ABRE
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 5);
-           registrarError(sym, "Falta el segundo número"); :}
+           registrarError(sym, "Falta una coma ',' entre los parámetros"); :}
 
-    | Ps IGUAL PAR_ABRE NUM COMA NUM error PUNTOCOMA
+    |IGUAL PAR_ABRE NUM COMA error PAR_CIERRA LLAVE_ABRE
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 6);
+               registrarError(sym, "Falta un '{'"); :}
+    |IGUAL PAR_ABRE NUM COMA NUM error LLAVE_ABRE
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 7);
+                   registrarError(sym, "Falta un '{'"); :}
+    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA error
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 8);
+                   registrarError(sym, "Falta un '{'"); :}
+
+    |IGUAL
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 6);
-           registrarError(sym, "Falta un ')'"); :}
-
-    | Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA error
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 1 + 1);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); :}
+    |IGUAL PAR_ABRE
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 8 + 7);
-           registrarError(sym, "Falta un ';'"); :}
-
-    | Ps IGUAL PAR_ABRE NUM COMA error
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 2);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); :}
+    |IGUAL PAR_ABRE NUM
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 6 + 5);
-           registrarError(sym, "Falta un segundo número y cierre de paréntesis"); :}
-
-    | Ps IGUAL PAR_ABRE error
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 3 + 3);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); :}
+    |IGUAL PAR_ABRE NUM COMA
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
-           registrarError(sym, "Paréntesis sin parámetros"); :}
-
-    | Ps IGUAL error
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 4);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); :}
+    |IGUAL PAR_ABRE NUM COMA NUM
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 3 + 2);
-           registrarError(sym, "Falta paréntesis y parámetros"); :}
-
-    | Ps IGUAL error PUNTOCOMA
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 5 + 6);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); :}
+    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 2);
-           registrarError(sym, "Falta paréntesis con parámetros"); :}
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 6 + 6);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); :}
+    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE
+        {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 7);
+                   registrarError(sym, "Comando incompleto, debe ser de la forma 'posicion=(x,y){figura};'"); :};
 
 
+figuras ::=
+    figura
+    | figuras figura;
 
-    | Rec PAR_ABRE NUM COMA NUM PAR_CIERRA PUNTOCOMA
-    | Ln PAR_ABRE NUM COMA NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA
-    | Cir PAR_ABRE NUM COMA NUM COMA NUM PAR_CIERRA PUNTOCOMA;
+
+figura ::=
+    Rec IGUAL PAR_ABRE NUM COMA NUM COMA C PAR_CIERRA PUNTOCOMA
+    {:
+        int ancho = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 6)).value.toString());
+        int alto = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+        String col = ((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 2)).value.toString();
+        ComandoGlobal.comandos.add("rec," + ancho + "," + alto + "," + col);
+    :}
+  | Cir IGUAL PAR_ABRE NUM COMA C PAR_CIERRA PUNTOCOMA
+    {:
+        int radio = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+        String col = ((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 2)).value.toString();
+        ComandoGlobal.comandos.add("cir," + radio + "," + col);
+    :}
+  | Ln IGUAL PAR_ABRE NUM COMA NUM COMA C PAR_CIERRA PUNTOCOMA
+    {:
+        int x2 = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 6)).value.toString());
+        int y2 = Integer.parseInt(((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 4)).value.toString());
+        String col = ((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 3)).value.toString();
+        ComandoGlobal.comandos.add("ln," + x2 + "," + y2 + "," + col);
+    :}
+  | Lpr PUNTOCOMA
+     {: errorRecuperado = true;
+        Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
+        ComandoGlobal.comandos.add("lpr");:};
+
 

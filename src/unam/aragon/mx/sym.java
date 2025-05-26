@@ -8,7 +8,7 @@ package unam.aragon.mx;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int NUM = 14;
+  public static final int NUM = 16;
   public static final int COMA = 10;
   public static final int Cir = 8;
   public static final int C = 2;
@@ -22,7 +22,9 @@ public class sym {
   public static final int error = 1;
   public static final int PUNTOCOMA = 11;
   public static final int Ln = 7;
+  public static final int LLAVE_ABRE = 15;
   public static final int F = 4;
+  public static final int LLAVE_CIERRA = 14;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -38,6 +40,8 @@ public class sym {
   "PUNTOCOMA",
   "PAR_ABRE",
   "PAR_CIERRA",
+  "LLAVE_CIERRA",
+  "LLAVE_ABRE",
   "NUM"
   };
 }

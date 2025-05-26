@@ -1,5 +1,8 @@
-fondo = yellow;
+posicion = (123,145){
+rectangulo = (124,141,red);
+circulo = (92,blue);
+linea = (12,41,yellow);
+limpiar;
+};
 
-fondo = green;
-
-fondo = red;
+limpiar;
