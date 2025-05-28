@@ -1,5 +1,6 @@
 package unam.aragon.mx;
 
+import com.sun.jdi.InconsistentDebugInfoException;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -97,6 +98,7 @@ public class CompiladorController {
     void actionEjecutar(ActionEvent event) {
         if (tiempo != null) {
             tiempo.stop();
+            System.out.println("SE ESTA EJECUTANDO");
         }
 
         this.indiceComandoc = 0;
@@ -121,6 +123,7 @@ public class CompiladorController {
         this.escena = escena;
     }
 
+//    FIGURA????______________________________________________________
 
     abstract class Figura {
         String id;
@@ -235,84 +238,162 @@ public class CompiladorController {
 
     //----------------INTEGRAR NOMBRE DE FIGURA---------------------
 
-//    DE ACUERDO A LA GAMATICA
-//        primero debemos definir el nombe de la figura
-//        despues es ir colocando los parametros
-//            circulo1 = cir,20,45,red;
-//        a ese figura con NOMBRE sera la manera de representar la figura
-//
-//        Gracias a ese identificador, después podemos aplicar comandos sobre esa figura:
-//            comandos.add("mv, circulo1, abajo, 10;");
-//            comandos.add("mv, circulo1, arriba, 5;");
+
+//si tienen nombre entonces se ejecuta uno u otra funcion
+    private void procesarComando(String comando) {
+        if (comando.contains("=")) {
+            procesarComandoConNombre(comando);
+        } else {
+            procesarComandoSinNombre(comando);
+        }
+    }
+
+//----------------INTEGRAR NOMBRE DE FIGURA---------------------
+//    CON NOMBRE
 
     private void procesarComandoConNombre(String comando) {
         // Formato: "nombre = tipo,param1,param2,...,color;"
-        String[] partes = comando.split("=");
-        String id = partes[0].trim().replace(";", "");
-        String parametros = partes[1].trim().replace(";", "");
-
-        // Verificar ID duplicado
-        for (Figura f : figuras) {
-            if (f.coincideId(id)) {
-                txtMensajes.appendText("Error: '" + id + "' ya existe\n");
-                return;
-            }
-        }
-
-        if (!comando.contains("=")) {
-            txtMensajes.appendText("Error: Falta '=' en el comando\n");
-            return;
-        }
-
-        String[] args = parametros.split(",");
-        String tipo = args[0].trim();
-
         try {
-            switch(tipo) {
-                case "cir": // Círculo: "nombre = cir,x,y,ancho,alto,color;"
-                    figuras.add(new Circulo(
-                            id,
-                            obtenerColor(args[5].trim()),
-                            Integer.parseInt(args[1].trim()),
-                            Integer.parseInt(args[2].trim()),
-                            Integer.parseInt(args[3].trim()),
-                            Integer.parseInt(args[4].trim())
-                    ));
-                    break;
+            String[] partes = comando.split("=");
+            String id = partes[0].trim().replace(";", "");
+            String parametros = partes[1].trim().replace(";", "");
 
-                case "rec": // Rectángulo: "nombre = rec,x,y,ancho,alto,color;"
-                    figuras.add(new Rectangulo(
-                            id,
-                            obtenerColor(args[5].trim()),
-                            Integer.parseInt(args[1].trim()),
-                            Integer.parseInt(args[2].trim()),
-                            Integer.parseInt(args[3].trim()),
-                            Integer.parseInt(args[4].trim())
-                    ));
-                    break;
-
-                case "lin": // Línea: "nombre = lin,x1,y1,x2,y2,color;"
-                    // (Requiere implementar clase Linea)
-                    figuras.add(new Linea(
-                            id,
-                            obtenerColor(args[5].trim()),
-                            Integer.parseInt(args[1].trim()),
-                            Integer.parseInt(args[2].trim()),
-                            Integer.parseInt(args[3].trim()),
-                            Integer.parseInt(args[4].trim())
-                    ));
-                    break;
-
-
-                default:
-                    txtMensajes.appendText("Error: Tipo de figura '" + tipo + "' no reconocido\n");
+            // Verificar si ya existe una figura con ese id
+            for (Figura f : figuras) {
+                if (f.coincideId(id)) {
+                    txtMensajes.appendText("Error: '" + id + "' ya existe\n");
                     return;
+                }
             }
-            txtMensajes.appendText("Figura '" + id + "' creada exitosamente\n");
+
+            String[] args = parametros.split(",");
+            String tipo = args[0].trim();
+
+            try {
+                Figura nuevaFigura = null;
+                switch (tipo) {
+                    case "cir": // Círculo: "nombre = cir,x,y,ancho,alto,color;"
+                        nuevaFigura = new Circulo(
+                                id,
+                                obtenerColor(args[5].trim()),
+                                Integer.parseInt(args[1].trim()),
+                                Integer.parseInt(args[2].trim()),
+                                Integer.parseInt(args[3].trim()),
+                                Integer.parseInt(args[4].trim())
+                        );
+                        break;
+
+                    case "rec": // Rectángulo: "nombre = rec,x,y,ancho,alto,color;"
+                        nuevaFigura = new Rectangulo(
+                                id,
+                                obtenerColor(args[5].trim()),
+                                Integer.parseInt(args[1].trim()),
+                                Integer.parseInt(args[2].trim()),
+                                Integer.parseInt(args[3].trim()),
+                                Integer.parseInt(args[4].trim())
+                        );
+                        break;
+
+                    case "lin": // Línea: "nombre = lin,x1,y1,x2,y2,color;"
+                        nuevaFigura = new Linea(
+                                id,
+                                obtenerColor(args[5].trim()),
+                                Integer.parseInt(args[1].trim()),
+                                Integer.parseInt(args[2].trim()),
+                                Integer.parseInt(args[3].trim()),
+                                Integer.parseInt(args[4].trim())
+                        );
+                        break;
+
+                    default:
+                        txtMensajes.appendText("Error: Tipo de figura '" + tipo + "' no reconocido\n");
+                        return;
+                }
+
+                if (nuevaFigura != null) {
+                    figuras.add(nuevaFigura);
+                    // Dibujar la figura inmediatamente
+                    nuevaFigura.dibujar(graficos);
+                    txtMensajes.appendText("Figura '" + id + "' creada y dibujada exitosamente\n");
+                }
+            } catch (Exception e) {
+                txtMensajes.appendText("Error en los parámetros para '" + id + "'. Verifica los valores\n");
+            }
+
         } catch (Exception e) {
-            txtMensajes.appendText("Error en los parámetros para '" + id + "'. Verifica los valores\n");
+            txtMensajes.appendText("Error en comando: " + e.getMessage() + "\n");
         }
     }
+
+
+    //    SIN NOMBRE
+private void procesarComandoSinNombre(String comando) {
+    if (comando == null || comando.trim().isEmpty()) {
+        txtMensajes.appendText("Error: Comando vacío\n");
+        return;
+    }
+    String[] partes = comando.split(",");
+    String tipo = partes[0].trim();
+
+    try {
+        switch(tipo) {
+            case "rec": // Rectángulo: "rec,ancho,alto,color"
+                if (partes.length < 4) {
+                    txtMensajes.appendText("Error: Faltan parámetros. Formato: rec,ancho,alto,color\n");
+                    return;
+                }
+                if (partes.length >= 4) {
+                    graficos.setFill(obtenerColor(partes[3].trim()));
+                    graficos.fillRect(
+                            x, // Usa la posición actual (x,y)
+                            y,
+                            Integer.parseInt(partes[1].trim()),
+                            Integer.parseInt(partes[2].trim())
+                    );
+                }
+                break;
+
+            case "cir": // Círculo: "cir,radio,color"
+                if (partes.length < 3) {
+                    txtMensajes.appendText("Error: Faltan parámetros. Formato: cir,radio,color\n");
+                    return;
+                }
+                if (partes.length >= 3) {
+                    int radio = Integer.parseInt(partes[1].trim());
+                    graficos.setFill(obtenerColor(partes[2].trim()));
+                    graficos.fillOval(
+                            x - radio, // Centrado en (x,y)
+                            y - radio,
+                            radio * 2,
+                            radio * 2
+                    );
+                }
+                break;
+
+            case "lin": // Línea: "ln,x2,y2,color"
+                if (partes.length < 4) {
+                    txtMensajes.appendText("Error: Faltan parámetros. Formato: ln,x2,y2,color\n");
+                    return;
+                }
+                if (partes.length >= 4) {
+                    graficos.setStroke(obtenerColor(partes[3].trim()));
+                    graficos.strokeLine(
+                            x,  // Desde (x,y) actual
+                            y,
+                            Integer.parseInt(partes[1].trim()), // Hasta (x2,y2)
+                            Integer.parseInt(partes[2].trim())
+                    );
+                }
+                break;
+
+            default:
+                txtMensajes.appendText("Error: Tipo de figura '" + tipo + "' no reconocido\n");
+        }
+    } catch (Exception e) {
+        txtMensajes.appendText("Error en comando: " + e.getMessage() + "\n");
+    }
+}
+
 
     //----------------INTEGRAR NOMBRE DE FIGURA---------------------
 
@@ -324,80 +405,174 @@ public class CompiladorController {
     private void lecturaComando() {
         if (indiceComandoc < ComandoGlobal.comandos.size()) {
             String comando = ComandoGlobal.comandos.get(indiceComandoc);
+            System.out.println("Procesando comando: " + comando);
+
+            // Dividir el comando en partes siempre
             String[] partes = comando.split(",");
-            System.out.println("Agregando comando: " + comando); // <- AQUÍ
 
             switch (partes[0]) {
-                case "lpr" -> limpiar = true;
-                case "f" -> {
+                case "fig_nombrada":
+                    procesarFiguraNombrada(partes);
+                    break;
+
+                case "lpr":
+                    limpiar = true;
+                    break;
+
+                case "f":
                     fondoActivo = true;
                     if (partes.length > 1) {
                         color = obtenerColor(partes[1]);
                     } else {
                         System.out.println("Comando 'f' sin color");
                     }
-                }
-                case "ps" -> {
+                    break;
+
+                case "ps":
                     if (partes.length >= 3) {
                         try {
                             x = Integer.parseInt(partes[1].trim());
                             y = Integer.parseInt(partes[2].trim());
                             posicionPunto = true;
                         } catch (NumberFormatException e) {
-                            System.out.println("Error al convertir coordenadas en comando 'ps': " + e.getMessage());
+                            System.out.println("Error en comando 'ps': " + e.getMessage());
                         }
                     } else {
-                        System.out.println("Comando 'ps' incompleto. Se esperaban dos parámetros: x, y");
+                        System.out.println("Comando 'ps' incompleto");
                     }
-                }
-                case "rec" -> {
-                    if (partes.length >= 4) {
+                    break;
+
+                case "rec":
+                    if (partes.length >= 6) {
                         try {
-                            ancho = Integer.parseInt(partes[1].trim());
-                            alto = Integer.parseInt(partes[2].trim());
-                            fondoFigura = obtenerColor(partes[3].trim());
+                            x = Integer.parseInt(partes[1].trim());
+                            y = Integer.parseInt(partes[2].trim());
+                            ancho = Integer.parseInt(partes[3].trim());
+                            alto = Integer.parseInt(partes[4].trim());
+                            fondoFigura = obtenerColor(partes[5].trim());
                             rectanguloActivo = true;
                         } catch (NumberFormatException e) {
                             System.out.println("Error en comando 'rec': " + e.getMessage());
                         }
                     }
-                }
-                case "ln" -> {
-                    if (partes.length >= 3) {
+                    break;
+
+                case "ln":
+                    if (partes.length >= 6) {
                         try {
-                            ancho = Integer.parseInt(partes[1].trim());  // destino x
-                            alto = Integer.parseInt(partes[2].trim());   // destino y
-                            colorFigura = (partes.length == 4) ? obtenerColor(partes[3].trim()) : Color.BLACK;
+                            // Punto de inicio (desde posición actual o comando ps)
+                            int x1 = Integer.parseInt(partes[1].trim());
+                            int y1 = Integer.parseInt(partes[2].trim());
+
+                            // Punto final
+                            int x2 = Integer.parseInt(partes[3].trim());
+                            int y2 = Integer.parseInt(partes[4].trim());
+
+                            // Color
+                            colorFigura = obtenerColor(partes[5].trim());
+
+                            // Actualizar variables para pintar
+                            this.x = x1;
+                            this.y = y1;
+                            this.ancho = x2;
+                            this.alto = y2;
                             lineaActiva = true;
                         } catch (NumberFormatException e) {
                             System.out.println("Error en comando 'ln': " + e.getMessage());
                         }
                     }
-                }
-                case "cir" -> {
-                    if (partes.length >= 3) {
+                    break;
+
+                case "cir":
+                    if (partes.length >= 5) {
                         try {
-                            int radio = Integer.parseInt(partes[1].trim());
-                            ancho = radio * 2;
-                            alto = radio * 2;
-                            fondoFigura = obtenerColor(partes[2].trim());
+                            // Posición del centro
+                            int centroX = Integer.parseInt(partes[1].trim());
+                            int centroY = Integer.parseInt(partes[2].trim());
+
+                            // Radio
+                            int radio = Integer.parseInt(partes[3].trim());
+
+                            // Color
+                            fondoFigura = obtenerColor(partes[4].trim());
+
+                            // Actualizar variables para pintar
+                            this.x = centroX - radio;
+                            this.y = centroY - radio;
+                            this.ancho = radio * 2;
+                            this.alto = radio * 2;
                             circuloActivo = true;
                         } catch (NumberFormatException e) {
                             System.out.println("Error en comando 'cir': " + e.getMessage());
                         }
                     }
-                }
-
-
-
-
-
-                // otros casos (ps, rec, etc) aquí...
+                    break;
             }
-            indiceComandoc++;  // Avanza para la próxima llamada
+
+            indiceComandoc++;
         } else {
             System.out.println("No hay más comandos para procesar");
-            tiempo.stop();
+            if (tiempo != null) tiempo.stop();
+        }
+    }
+
+
+    private void procesarFiguraNombrada(String[] partes) {
+        if (partes.length < 6) {
+            System.out.println("Comando fig_nombrada incompleto");
+            return;
+        }
+
+        String nombre = partes[1];
+        String tipo = partes[2];
+
+        // Verificar ID duplicado
+        for (Figura f : figuras) {
+            if (f.coincideId(nombre)) {
+                System.out.println("Error: Figura '" + nombre + "' ya existe");
+                return;
+            }
+        }
+
+        try {
+            switch(tipo) {
+                case "rec":
+                    if (partes.length >= 8) {
+                        int x = Integer.parseInt(partes[3].trim());
+                        int y = Integer.parseInt(partes[4].trim());
+                        int ancho = Integer.parseInt(partes[5].trim());
+                        int alto = Integer.parseInt(partes[6].trim());
+                        Color color = obtenerColor(partes[7].trim());
+                        figuras.add(new Rectangulo(nombre, color, x, y, ancho, alto));
+                    }
+                    break;
+
+                case "cir":
+                    if (partes.length >= 7) {
+                        int centroX = Integer.parseInt(partes[3].trim());
+                        int centroY = Integer.parseInt(partes[4].trim());
+                        int radio = Integer.parseInt(partes[5].trim());
+                        Color color = obtenerColor(partes[6].trim());
+                        figuras.add(new Circulo(nombre, color, centroX, centroY, radio*2, radio*2));
+                    }
+                    break;
+
+                case "ln":
+                    if (partes.length >= 8) {
+                        int x1 = Integer.parseInt(partes[3].trim());
+                        int y1 = Integer.parseInt(partes[4].trim());
+                        int x2 = Integer.parseInt(partes[5].trim());
+                        int y2 = Integer.parseInt(partes[6].trim());
+                        Color color = obtenerColor(partes[7].trim());
+                        figuras.add(new Linea(nombre, color, x1, y1, x2, y2));
+                    }
+                    break;
+
+                default:
+                    System.out.println("Tipo de figura no reconocido: " + tipo);
+            }
+        } catch (Exception e) {
+            System.out.println("Error procesando figura nombrada '" + nombre + "': " + e.getMessage());
         }
     }
 
@@ -455,8 +630,5 @@ public class CompiladorController {
             stage.close();
         });
     }
-
-
-
 
 }

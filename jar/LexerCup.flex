@@ -34,13 +34,20 @@ import java.util.LinkedList;
 
 %%
 
+// reglas
 // Palabras clave
-"limpiar"           { return symbol(sym.Lpr, yytext()); }
-"fondo"             { return symbol(sym.F, yytext()); }
-"posicion"          { return symbol(sym.Ps, yytext()); }
-"rectangulo"        { return symbol(sym.Rec, yytext()); }
-"linea"             { return symbol(sym.Ln, yytext()); }
-"circulo"           { return symbol(sym.Cir, yytext()); }
+"limpiar"                { return symbol(sym.Lpr, yytext()); }
+"fondo"                  { return symbol(sym.F, yytext()); }
+"posicion"               { return symbol(sym.Ps, yytext()); }
+"rectangulo"             { return symbol(sym.Rec, yytext()); }
+"linea"                  { return symbol(sym.Ln, yytext()); }
+"circulo"                { return symbol(sym.Cir, yytext()); }
+
+// "mover"                  { return symbol(sym.mv, yytext()); }
+// "arriba"                 { return symbol(sym.arri, yytext()); }
+// "abajo"                  { return symbol(sym.aba, yytext()); }
+// "derecha"                { return symbol(sym.der, yytext()); }
+// "izquierda"              { return symbol(sym.izq, yytext()); }
 
 // Símbolos
 ","                 { return symbol(sym.COMA, yytext()); }
@@ -48,14 +55,20 @@ import java.util.LinkedList;
 "("                 { return symbol(sym.PAR_ABRE, yytext()); }
 ")"                 { return symbol(sym.PAR_CIERRA, yytext()); }
 "="                 { return symbol(sym.IGUAL, yytext()); }
-"{"                 { return new Symbol(sym.LLAVE_ABRE); }
-"}"                 { return new Symbol(sym.LLAVE_CIERRA); }
+"{"                 { return symbol(sym.LLAVE_ABRE, yytext()); }
+"}"                 { return symbol(sym.LLAVE_CIERRA, yytext()); }
+
+// colores
 "red"               { return symbol(sym.C, yytext()); }
 "blue"              { return symbol(sym.C, yytext()); }
 "green"             { return symbol(sym.C, yytext()); }
 "yellow"             { return symbol(sym.C, yytext()); }
 "white"             { return symbol(sym.C, yytext()); }
 "orange"             { return symbol(sym.C, yytext()); }
+
+// id
+[a-zA-Z][a-zA-Z0-9_]*    { return symbol(sym.ID, yytext()); } // para q identifique los nombres d figuras
+
 
 // Números
 [0-9]+              { return symbol(sym.NUM, Integer.parseInt(yytext())); }
