@@ -46,12 +46,12 @@ public class CompiladorController {
     Color colorFigura = null;
 
     // WHILE Y MOVIMIENTO
-    private Map<String, Integer> variables = new HashMap<>();
+    //private Map<String, Integer> variables = new HashMap<>();
     private Stack<Integer> stackWhileStart = new Stack<>(); // Guarda índices de inicio de bucles
     private Stack<String[]> stackWhileConditions = new Stack<>(); // Guarda condiciones
 
     @FXML
-    private Button bntEjecutar;
+    private Button btnEjecutar;
 
     @FXML
     private Button btnCompilar;
@@ -72,7 +72,7 @@ public class CompiladorController {
     public void actionCompilar() {
         parser.TablaES.clear();
         ComandoGlobal.comandos.clear();
-        parser.TablaES.clear();
+        ComandoGlobal.compiladoCorrectamente = true;
         txtMensajes.clear();
         this.guardarArchivo();
 
@@ -85,31 +85,41 @@ public class CompiladorController {
             sintactico.parse();
 
             if (!parser.TablaES.isEmpty()) {
+                ComandoGlobal.compiladoCorrectamente = false; // errores encontrados
                 txtMensajes.appendText("Errores sintácticos encontrados:\n");
                 for (TError e : parser.TablaES) {
                     txtMensajes.appendText(e.toString() + "\n");
                 }
+                btnEjecutar.setDisable(true);
             } else {
                 txtMensajes.appendText("Compilación terminada exitosamente. No se encontraron errores.\n");
+                btnEjecutar.setDisable(false);
             }
 
         } catch (Exception e) {
+            ComandoGlobal.compiladoCorrectamente = false;
             e.printStackTrace();
             txtMensajes.appendText("Error durante la compilación: " + e.getMessage() + "\n");
+            btnEjecutar.setDisable(true);
         }
     }
 
 
     @FXML
     void actionEjecutar(ActionEvent event) {
+
+        if (!ComandoGlobal.compiladoCorrectamente) {
+            txtMensajes.appendText("No se puede ejecutar: primero debes compilar sin errores.\n");
+            return;
+        }
+
         if (tiempo != null) {
             tiempo.stop();
-            System.out.println("SE ESTA EJECUTANDO");
         }
 
         this.indiceComandoc = 0;
         this.iniciar();
-        this.ciclo();   // solo aquí debe arrancar
+        this.ciclo();
     }
 
     private void guardarArchivo() {
@@ -122,6 +132,15 @@ public class CompiladorController {
         } catch (IOException e) {
             System.err.println("Error al guardar el archivo: " + e.getMessage());
         }
+    }
+
+    @FXML
+    public void initialize() {
+        btnEjecutar.setDisable(true);
+        txtCodigo.textProperty().addListener((obs, oldText, newText) -> {
+            ComandoGlobal.compiladoCorrectamente = false;
+            btnEjecutar.setDisable(true);
+        });
     }
 
 
@@ -283,7 +302,6 @@ public class CompiladorController {
 //    CON NOMBRE
 
     private void procesarComandoConNombre(String comando) {
-        // Formato: "nombre = tipo,param1,param2,...,color;"
         try {
             String[] partes = comando.split("=");
             String id = partes[0].trim().replace(";", "");
@@ -539,6 +557,7 @@ private void procesarComandoSinNombre(String comando) {
                     break;
 
 //                    MOVER Y WHILE
+                /*
                 case "mv":
                     procesarMovimiento(partes);
                     break;
@@ -552,12 +571,16 @@ private void procesarComandoSinNombre(String comando) {
                 case "incrementar":
                     procesarIncremento(partes);
                     break;
+
+                 */
             }
             indiceComandoc++;
+
         } else {
             System.out.println("No hay más comandos para procesar");
             if (tiempo != null) tiempo.stop();
         }
+        /*
         if (comando.contains("=") && !comando.contains("mv") && !comando.contains("fig_nombrada")) {
             String[] asignacion = comando.split("=");
             if (asignacion.length == 2) {
@@ -569,7 +592,7 @@ private void procesarComandoSinNombre(String comando) {
                     System.out.println("Error en asignación: " + comando);
                 }
             }
-        }
+        }*/
     }
 
     private void procesarMovimiento(String[] partes) {
@@ -596,7 +619,7 @@ private void procesarComandoSinNombre(String comando) {
         }
     }
 
-    private void procesarWhileBegin(String[] partes) {
+    /*private void procesarWhileBegin(String[] partes) {
         if (partes.length < 4) {
             System.out.println("Comando 'while_begin' incompleto");
             return;
@@ -656,6 +679,8 @@ private void procesarComandoSinNombre(String comando) {
         }
     }
 
+     */
+    /*
     private void procesarIncremento(String[] partes) {
         if (partes.length < 2) {
             System.out.println("Comando 'incrementar' incompleto");
@@ -665,6 +690,8 @@ private void procesarComandoSinNombre(String comando) {
         int valorActual = variables.getOrDefault(variable, 0);
         variables.put(variable, valorActual + 1);
     }
+
+     */
 
 
     private void procesarFiguraNombrada(String[] partes) {
@@ -741,8 +768,7 @@ private void procesarComandoSinNombre(String comando) {
             @Override
             public void handle(long tiempoActual) {
                 double t = (tiempoActual - tiempoInicio[0]) / 1_000_000_000.0;
-                if ((int) t % 2 == 0) {
-//                  original es 5 == 1
+                if ((int) t % 5 == 1) {
                     tiempoInicio[0] = System.nanoTime();
                     lecturaComando();
                 }

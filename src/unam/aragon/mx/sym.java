@@ -8,24 +8,34 @@ package unam.aragon.mx;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
+  public static final int CONTADOR = 27;
   public static final int PAR_CIERRA = 15;
+  public static final int Abajo = 21;
   public static final int LLAVE_ABRE = 17;
   public static final int LLAVE_CIERRA = 16;
   public static final int IGUAL = 11;
   public static final int Cir = 10;
   public static final int ID = 3;
+  public static final int Derecha = 22;
   public static final int NUM = 4;
   public static final int PAR_ABRE = 14;
+  public static final int Izquierda = 23;
   public static final int F = 6;
   public static final int COMA = 12;
+  public static final int MENOR_QUE = 25;
   public static final int Ln = 9;
   public static final int EOF = 0;
   public static final int C = 2;
   public static final int Rec = 8;
+  public static final int INCREMENTO = 24;
+  public static final int Mv = 18;
   public static final int error = 1;
   public static final int Lpr = 5;
   public static final int Ps = 7;
   public static final int PUNTOCOMA = 13;
+  public static final int While = 19;
+  public static final int MIENTRAS = 26;
+  public static final int Arriba = 20;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -44,7 +54,17 @@ public class sym {
   "PAR_ABRE",
   "PAR_CIERRA",
   "LLAVE_CIERRA",
-  "LLAVE_ABRE"
+  "LLAVE_ABRE",
+  "Mv",
+  "While",
+  "Arriba",
+  "Abajo",
+  "Derecha",
+  "Izquierda",
+  "INCREMENTO",
+  "MENOR_QUE",
+  "MIENTRAS",
+  "CONTADOR"
   };
 }
 

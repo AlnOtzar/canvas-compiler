@@ -13,7 +13,7 @@
       <Canvas fx:id="canvas" height="400.0" layoutX="486.0" layoutY="29.0" width="400.0" />
       <TextArea fx:id="txtCodigo" layoutX="25.0" layoutY="29.0" prefHeight="317.0" prefWidth="434.0" />
       <Button fx:id="btnCompilar" layoutX="38.0" layoutY="377.0" mnemonicParsing="false" onAction="#actionCompilar" text="Compilar" />
-      <Button fx:id="bntEjecutar" layoutX="201.0" layoutY="377.0" mnemonicParsing="false" onAction="#actionEjecutar" text="Ejecutar" />
+      <Button fx:id="btnEjecutar" layoutX="201.0" layoutY="377.0" mnemonicParsing="false" onAction="#actionEjecutar" text="Ejecutar" />
       <TextArea fx:id="txtMensajes" layoutX="38.0" layoutY="467.0" prefHeight="110.0" prefWidth="800.0" />
    </children>
 

@@ -38,6 +38,7 @@ parser code
         int columna = (s.right >= 0) ? s.right + 1 : -1;
 
         TablaES.add(new TError(lexema, fila, columna, "Error Sintáctico", "Caracter no esperado (no recuperable)"));
+                        ComandoGlobal.compiladoCorrectamente = false;
     }
 
     public void registrarError(Symbol sym, String descripcion) {
@@ -45,6 +46,7 @@ parser code
         int columna = (sym != null && sym.right >= 0) ? sym.right + 1 : -1;
         String lexema = (sym != null && sym.value != null) ? sym.value.toString() : "EOF";
         TablaES.add(new TError(lexema, fila, columna, "Error Sintáctico", descripcion));
+                                ComandoGlobal.compiladoCorrectamente = false;
     }
 :}
 
@@ -62,7 +64,7 @@ terminal
 
 non terminal programa, instrucciones, instruccion, encabezado,
              encabezados, figuras, figura, mover, animacion, direccion, comparador,
-             bloque;
+             bloque, bloque_figuras;
 
 
 start with programa;
@@ -121,10 +123,7 @@ instruccion ::=
                            registrarError(sym, "Faltan los identificadores de instrucciónes ( color , ; )"); :}
 //    | Ps encabezado
     | encabezado
-                 {: errorRecuperado = true;
-                            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 1 + 1);
-                            registrarError(sym, "Comando incompleto '=(x,y){figura};'");
-                 :};
+                 {::};
 
 //posicion
 encabezados ::=
@@ -132,105 +131,158 @@ encabezados ::=
     | encabezados encabezado;
 
 encabezado ::=
-//    =(12,12){ figura }
-    Ps IGUAL PAR_ABRE NUM:x COMA NUM:y PAR_CIERRA LLAVE_ABRE
-          {:
-        ComandoGlobal.ultimaPosicionX = x.intValue();
-        ComandoGlobal.ultimaPosicionY = y.intValue();
-    :} figuras LLAVE_CIERRA PUNTOCOMA
 
-    |error PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE figuras LLAVE_CIERRA
-        {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 1);
-           registrarError(sym, "Falta un '='"); :}
+      Ps IGUAL PAR_ABRE NUM:x COMA NUM:y PAR_CIERRA
+      {:
+          ComandoGlobal.ultimaPosicionX = x.intValue();
+          ComandoGlobal.ultimaPosicionY = y.intValue();
+      :} bloque_figuras
 
-    |IGUAL error NUM COMA NUM PAR_CIERRA LLAVE_ABRE figuras LLAVE_CIERRA
-        {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 2);
-           registrarError(sym, "Falta un '('"); :}
+    |error IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 1);
+               registrarError(sym, "Falta posicion"); :} bloque_figuras
 
-    |IGUAL PAR_ABRE error COMA NUM PAR_CIERRA LLAVE_ABRE figuras LLAVE_CIERRA
+    |Ps error PAR_ABRE NUM COMA NUM PAR_CIERRA
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 3);
-           registrarError(sym, "Falta el primer número entre los parámetros"); :}
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 2);
+           registrarError(sym, "Falta un '='"); :} bloque_figuras
 
-    |IGUAL PAR_ABRE error error error PAR_CIERRA LLAVE_ABRE figuras LLAVE_CIERRA
+    |Ps IGUAL error NUM COMA NUM PAR_CIERRA
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 3);
-           registrarError(sym, "Faltan los parámetros correctamente escritos"); :}
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 3);
+           registrarError(sym, "Falta un '('"); :} bloque_figuras
 
-    |IGUAL PAR_ABRE NUM error NUM PAR_CIERRA LLAVE_ABRE figuras LLAVE_CIERRA
+    |Ps IGUAL PAR_ABRE error COMA NUM PAR_CIERRA
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 4);
-           registrarError(sym, "Falta una coma ',' entre los parámetros"); :}
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 4);
+           registrarError(sym, "Falta el primer número entre los parámetros"); :} bloque_figuras
 
-    |IGUAL PAR_ABRE NUM COMA error PAR_CIERRA LLAVE_ABRE figuras LLAVE_CIERRA
+    |Ps IGUAL PAR_ABRE error PAR_CIERRA
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 5);
-           registrarError(sym, "Falta el segundo número entre los parámetros"); :}
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 5 +4);
+           registrarError(sym, "Faltan los parámetros correctamente escritos"); :} bloque_figuras
 
-    |IGUAL PAR_ABRE NUM COMA NUM error LLAVE_ABRE figuras LLAVE_CIERRA
+    |Ps IGUAL PAR_ABRE NUM error NUM PAR_CIERRA
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 6);
-           registrarError(sym, "Falta un ')'"); :}
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 5);
+           registrarError(sym, "Falta una coma ',' entre los parámetros"); :} bloque_figuras
+    |Ps IGUAL PAR_ABRE NUM COMA error PAR_CIERRA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 6);
+           registrarError(sym, "Falta el segundo número entre los parámetros"); :} bloque_figuras
 
-    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA error figuras LLAVE_CIERRA
+    |Ps IGUAL PAR_ABRE NUM COMA NUM error
         {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 7);
-           registrarError(sym, "Falta un '{'"); :}
-
-    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE error LLAVE_CIERRA
-        {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 8);
-           registrarError(sym, "Falta que introduzcas una figura de la forma 'tipoFigura (ancho, alto, color);'"); :}
-
-    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE figuras error
-        {: errorRecuperado = true;
-           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 9);
-           registrarError(sym, "Falta cerrar con '}'"); :}
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 7 + 7);
+           registrarError(sym, "Falta un ')'"); :}bloque_figuras
 
     // Casos de comandos incompletos (solo partes del encabezado)
-    |IGUAL
+    |Ps
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
+               registrarError(sym, "Comando incompleto, falta '=(x,y){figura}'"); :}bloque_figuras
+    |Ps IGUAL
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Comando incompleto, falta '(x,y){figura}'"); :}
+           registrarError(sym, "Comando incompleto, falta '(x,y){figura}'"); :}bloque_figuras
 
-    |IGUAL PAR_ABRE
+    |Ps IGUAL PAR_ABRE
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Comando incompleto, falta 'x,y){figura}'"); :}
+           registrarError(sym, "Comando incompleto, falta 'x,y){figura}'"); :}bloque_figuras
 
-    |IGUAL PAR_ABRE NUM
+    |Ps IGUAL PAR_ABRE NUM
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Comando incompleto, falta ',y){figura}'"); :}
+           registrarError(sym, "Comando incompleto, falta ',y){figura}'"); :}bloque_figuras
 
-    |IGUAL PAR_ABRE NUM COMA
+    |Ps IGUAL PAR_ABRE NUM COMA
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Comando incompleto, falta 'y){figura}'"); :}
+           registrarError(sym, "Comando incompleto, falta 'y){figura}'"); :}bloque_figuras
 
-    |IGUAL PAR_ABRE NUM COMA NUM
+    |Ps IGUAL PAR_ABRE NUM COMA NUM
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Comando incompleto, falta '){figura}'"); :}
+           registrarError(sym, "Comando incompleto, falta '){figura}'"); :}bloque_figuras
 
-    |IGUAL PAR_ABRE PAR_CIERRA
+    |Ps IGUAL PAR_ABRE PAR_CIERRA
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Faltan coordenadas entre los paréntesis"); :}
+           registrarError(sym, "Faltan coordenadas entre los paréntesis"); :}bloque_figuras
 
-    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA
+    |Ps IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Falta la figura dentro de las llaves"); :}
+           registrarError(sym, "Comando incompleto, falta '{figura}'"); :}bloque_figuras
 
-    |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE
+    |Ps IGUAL PAR_ABRE PAR_CIERRA
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
+               registrarError(sym, "Faltan parametros}'"); :}bloque_figuras
+
+    |Ps IGUAL PAR_ABRE NUM COMA PAR_CIERRA
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Falta la figura antes de cerrar con '}'");
+           registrarError(sym, "falta un parameto y ,"); :}bloque_figuras
 
-           :};
+    |Ps IGUAL PAR_ABRE COMA NUM PAR_CIERRA
+        {: errorRecuperado = true;
+           Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
+           registrarError(sym, "falta un parameto y ,"); :}bloque_figuras;
+
+bloque_figuras ::=
+      LLAVE_ABRE figuras LLAVE_CIERRA PUNTOCOMA
+
+    | error
+                {:
+                    errorRecuperado = true;
+                    registrarError((Symbol) CUP$parser$stack.peek(), "Falta ingresar {'");
+                :}
+
+    | error figuras LLAVE_CIERRA PUNTOCOMA
+            {:
+                errorRecuperado = true;
+                registrarError((Symbol) CUP$parser$stack.peek(), "Falta ingresar {'");
+            :}
+
+    | LLAVE_ABRE error LLAVE_CIERRA PUNTOCOMA
+            {:
+                errorRecuperado = true;
+                registrarError((Symbol) CUP$parser$stack.peek(), "Falta ingresar una o varias figuras'");
+            :}
+
+    |LLAVE_ABRE figuras error PUNTOCOMA
+                {:
+                    errorRecuperado = true;
+                    registrarError((Symbol) CUP$parser$stack.peek(), "Falta ingresar }'");
+                :}
+    |LLAVE_ABRE figuras LLAVE_CIERRA error
+        {:
+            errorRecuperado = true;
+            registrarError((Symbol) CUP$parser$stack.peek(), "Falta punto y coma ';'");
+        :}
+    |LLAVE_ABRE figuras error
+        {:
+            errorRecuperado = true;
+            registrarError((Symbol) CUP$parser$stack.peek(), "Faltan '}' y ';'");
+        :}
+
+    |LLAVE_ABRE
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
+               registrarError(sym, "Comando incompleto, falta 'figura};'"); :}
+
+    |LLAVE_ABRE figuras
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
+               registrarError(sym, "Comando incompleto, falta '};'"); :}
+
+    |LLAVE_ABRE figuras LLAVE_CIERRA
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
+               registrarError(sym, "Comando incompleto, falta ;"); :};
 
 
 figuras ::= figura
@@ -245,6 +297,51 @@ figura ::=
             ComandoGlobal.ultimaPosicionY + "," +
             ancho + "," + alto + "," + color);
     :}
+
+    |error PAR_ABRE NUM:ancho COMA NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
+            {: errorRecuperado = true;
+               Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 1);
+               registrarError(sym, "Falta ingresar una figura valida"); :}
+
+    |Rec error NUM:ancho COMA NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 2);
+                   registrarError(sym, "Falta el simbolo de '('"); :}
+
+    |Rec PAR_ABRE error COMA NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 3);
+                   registrarError(sym, "Falta el valor 'ancho'"); :}
+
+    |Rec PAR_ABRE NUM:ancho error NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 4);
+                   registrarError(sym, "Falta el simbolo de ',' entre ancho y alto"); :}
+
+    |Rec PAR_ABRE NUM:ancho COMA error COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 5);
+                   registrarError(sym, "Falta el valor alto"); :}
+
+    |Rec PAR_ABRE NUM:ancho COMA NUM:alto error C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 6);
+                   registrarError(sym, "Falta el simbolo de ',' despues del segundo valor"); :}
+
+    |Rec PAR_ABRE NUM:ancho COMA NUM:alto COMA error PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 7);
+                   registrarError(sym, "Falta ingresar el color despues de la coma y antes del )"); :}
+
+    |Rec PAR_ABRE NUM:ancho COMA NUM:alto COMA C:color error PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 8);
+                   registrarError(sym, "Falta ingresar ')' despues de color"); :}
+
+    |Rec PAR_ABRE NUM:ancho COMA NUM:alto COMA C:color PAR_CIERRA error
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 9);
+                   registrarError(sym, "Falta ingresar ';' al final de la instruccion "); :}
 
     // Rectángulo con nombre
     | ID:nombretoken IGUAL Rec PAR_ABRE NUM:ancho COMA NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
@@ -263,6 +360,46 @@ figura ::=
             ComandoGlobal.ultimaPosicionY + "," +
             radio + "," + color);
     :}
+
+    |Cir error NUM:ancho COMA NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 2);
+                   registrarError(sym, "Falta el simbolo de '('"); :}
+
+    |Cir PAR_ABRE error COMA NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 3);
+                   registrarError(sym, "Falta el valor 'ancho'"); :}
+
+    |Cir PAR_ABRE NUM:ancho error NUM:alto COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 4);
+                   registrarError(sym, "Falta el simbolo de ',' entre ancho y alto"); :}
+
+    |Cir PAR_ABRE NUM:ancho COMA error COMA C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 5);
+                   registrarError(sym, "Falta el valor alto"); :}
+
+    |Cir PAR_ABRE NUM:ancho COMA NUM:alto error C:color PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 6);
+                   registrarError(sym, "Falta el simbolo de ',' despues del segundo valor"); :}
+
+    |Cir PAR_ABRE NUM:ancho COMA NUM:alto COMA error PAR_CIERRA PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 7);
+                   registrarError(sym, "Falta ingresar el color despues de la coma y antes del )"); :}
+
+    |Cir PAR_ABRE NUM:ancho COMA NUM:alto COMA C:color error PUNTOCOMA
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 8);
+                   registrarError(sym, "Falta ingresar ')' despues de color"); :}
+
+    |Cir PAR_ABRE NUM:ancho COMA NUM:alto COMA C:color PAR_CIERRA error
+                {: errorRecuperado = true;
+                   Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 9 + 9);
+                   registrarError(sym, "Falta ingresar ';' al final de la instruccion "); :}
 
     // Círculo con nombre
     | ID:nombretoken IGUAL Cir PAR_ABRE NUM:radio COMA C:color PAR_CIERRA PUNTOCOMA
@@ -290,43 +427,4 @@ figura ::=
             ComandoGlobal.ultimaPosicionY + "," +
             x2 + "," + y2 + "," + color);
     :};
-
-//------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------
-
-direccion ::= Arriba:dir {: RESULT = "arriba"; :}
-            | Abajo:dir {: RESULT = "abajo"; :}
-            | Derecha:dir {: RESULT = "derecha"; :}
-            | Izquierda:dir {: RESULT = "izquierda"; :};
-
-bloque ::=
-    LLAVE_ABRE Mv CONTADOR INCREMENTO PUNTOCOMA LLAVE_CIERRA PUNTOCOMA
-    {:
-
-    :};
-
-animacion ::=
-//    mientras (condicion) { bloque };
-    MIENTRAS PAR_ABRE CONTADOR MENOR_QUE NUM:limite PAR_CIERRA
-    {:
-        String cond = var + ",<," + limite;
-        ComandoGlobal.comandos.add("while_begin," + cond);
-    :}  bloque
-
-    | MIENTRAS error
-        {:
-            registrarError((Symbol)CUP$parser$stack.elementAt(CUP$top-1), "Error en estructura while");
-        :};
-
-mover ::= Mv PAR_ABRE ID:fig COMA direccion:dir COMA NUM:cant PAR_CIERRA PUNTOCOMA
-          {:
-              ComandoGlobal.comandos.add("mv," + fig + "," + dir + "," + cant);
-          :}
-    | Mv error
-        {: registrarError((Symbol)CUP$parser$stack.elementAt(CUP$top-1), "Error en comando mover"); :}
-    | Mv PAR_ABRE error
-        {: registrarError((Symbol)CUP$parser$stack.elementAt(CUP$top-1), "Error en parámetros de mover"); :};
-//------------------------------------------------------------------------------------
-
 
