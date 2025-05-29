@@ -1,20 +1,16 @@
 limpiar;
 fondo = red;
-
 limpiar;
-
 posicion = (100,100){
     rectangulo(50,30,red);
     miCirculo = circulo(25,blue);
     linea(10,20,green);
-}
-
+};
 limpiar;
-
 posicion = (200,200){
     figura1 = rectangulo(100,50,blue);
-}
-
+    puta = linea(10,20,green);
+};
 limpiar;
 fondo = green;
 limpiar;

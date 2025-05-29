@@ -84,10 +84,6 @@ instruccion ::=
                                Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 2);
                                registrarError(sym, "Falta el identificador de instrucción (;)"); :}
 
-////    AGREGUE ESTO PERO NO LO PROBEEEEEEEEEEEEEEE
-//    | Ps IGUAL PARIZQ numero COMA numero PARDER LLAVEA lista_instrs LLAVEC PUNTOCOMA
-//          {: RESULT = new NodoPosicion($1, $4, $6, $9); :}
-
     | F IGUAL C PUNTOCOMA
         {:
             String colorTexto = (String)((Symbol)CUP$parser$stack.elementAt(CUP$parser$top - 1)).value;
@@ -117,8 +113,8 @@ instruccion ::=
             {: errorRecuperado = true;
                            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 4 + 3);
                            registrarError(sym, "Faltan los identificadores de instrucciónes ( color , ; )"); :}
-    | Ps encabezado
-    | Ps
+//    | Ps encabezado
+    | encabezado
                  {: errorRecuperado = true;
                             Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 1 + 1);
                             registrarError(sym, "Comando incompleto '=(x,y){figura};'");
