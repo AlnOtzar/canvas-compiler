@@ -1,6 +1,5 @@
 package unam.aragon.mx;
 
-import com.sun.jdi.InconsistentDebugInfoException;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import java.util.Stack;
+
 
 
 import java.io.*;
@@ -43,6 +44,11 @@ public class CompiladorController {
     Color color = null;
     Color fondoFigura = null;
     Color colorFigura = null;
+
+    // WHILE Y MOVIMIENTO
+    private Map<String, Integer> variables = new HashMap<>();
+    private Stack<Integer> stackWhileStart = new Stack<>(); // Guarda índices de inicio de bucles
+    private Stack<String[]> stackWhileConditions = new Stack<>(); // Guarda condiciones
 
     @FXML
     private Button bntEjecutar;
@@ -140,7 +146,9 @@ public class CompiladorController {
         }
 
         abstract void dibujar(GraphicsContext g);
-//        abstract void mover(int dx, int dy);
+
+        //        MOVER
+        abstract void mover(int dx, int dy);
 
     }
 
@@ -161,6 +169,13 @@ public class CompiladorController {
             g.setFill(color);
             g.fillRect(x, y, ancho, alto);
         }
+
+//        MOVER
+        @Override
+        void mover(int dx, int dy) {
+            x += dx;
+            y += dy;
+        }
     }
 
     class Circulo extends Figura {
@@ -179,6 +194,13 @@ public class CompiladorController {
             g.setFill(color);
             g.fillOval(x - ancho / 2.0, y - alto / 2.0, ancho, alto);
         }
+
+        //        MOVER
+        @Override
+        void mover(int dx, int dy) {
+            x += dx;
+            y += dy;
+        }
     }
 
     class Linea extends Figura {
@@ -196,6 +218,15 @@ public class CompiladorController {
         void dibujar(GraphicsContext g) {
             g.setStroke(color);
             g.strokeLine(x1, y1, x2, y2);
+        }
+
+        //        MOVER
+        @Override
+        void mover(int dx, int dy) {
+            x1 += dx;
+            y1 += dy;
+            x2 += dx;
+            y2 += dy;
         }
     }
 
@@ -407,7 +438,6 @@ private void procesarComandoSinNombre(String comando) {
             String comando = ComandoGlobal.comandos.get(indiceComandoc);
             System.out.println("Procesando comando: " + comando);
 
-            // Dividir el comando en partes siempre
             String[] partes = comando.split(",");
 
             switch (partes[0]) {
@@ -507,13 +537,133 @@ private void procesarComandoSinNombre(String comando) {
                         }
                     }
                     break;
-            }
 
+//                    MOVER Y WHILE
+                case "mv":
+                    procesarMovimiento(partes);
+                    break;
+
+                case "while_begin":
+                    procesarWhileBegin(partes);
+                    break;
+                case "while_end":
+                    procesarWhileEnd();
+                    break;
+                case "incrementar":
+                    procesarIncremento(partes);
+                    break;
+            }
             indiceComandoc++;
         } else {
             System.out.println("No hay más comandos para procesar");
             if (tiempo != null) tiempo.stop();
         }
+        if (comando.contains("=") && !comando.contains("mv") && !comando.contains("fig_nombrada")) {
+            String[] asignacion = comando.split("=");
+            if (asignacion.length == 2) {
+                String var = asignacion[0].trim();
+                try {
+                    int valor = Integer.parseInt(asignacion[1].replace(";", "").trim());
+                    variables.put(var, valor);
+                } catch (NumberFormatException e) {
+                    System.out.println("Error en asignación: " + comando);
+                }
+            }
+        }
+    }
+
+    private void procesarMovimiento(String[] partes) {
+        if (partes.length < 4) {
+            System.out.println("Comando 'mv' incompleto");
+            return;
+        }
+        String nombreFigura = partes[1];
+        String direccion = partes[2];
+        int cantidad = Integer.parseInt(partes[3]);
+
+        for (Figura figura : figuras) {
+            if (figura.coincideId(nombreFigura)) {
+                int dx = 0, dy = 0;
+                switch (direccion) {
+                    case "arriba": dy = -cantidad; break;
+                    case "abajo": dy = cantidad; break;
+                    case "izquierda": dx = -cantidad; break;
+                    case "derecha": dx = cantidad; break;
+                }
+                figura.mover(dx, dy);
+                break;
+            }
+        }
+    }
+
+    private void procesarWhileBegin(String[] partes) {
+        if (partes.length < 4) {
+            System.out.println("Comando 'while_begin' incompleto");
+            return;
+        }
+        String variable = partes[1];
+        String operador = partes[2];
+        int limite = Integer.parseInt(partes[3]);
+
+        int valorActual = variables.getOrDefault(variable, 0);
+        boolean cumple = false;
+
+        switch (operador) {
+            case "<": cumple = valorActual < limite; break;
+        }
+
+        if (cumple) {
+            // Guardar posición actual para volver
+            stackWhileStart.push(indiceComandoc);
+            stackWhileConditions.push(partes);
+        } else {
+            // Saltar hasta el while_end
+            int nivel = 1;
+            while (indiceComandoc < ComandoGlobal.comandos.size() && nivel > 0) {
+                indiceComandoc++;
+                if (indiceComandoc < ComandoGlobal.comandos.size()) {
+                    String cmd = ComandoGlobal.comandos.get(indiceComandoc);
+                    if (cmd.startsWith("while_begin")) nivel++;
+                    else if (cmd.equals("while_end")) nivel--;
+                }
+            }
+        }
+    }
+
+    private void procesarWhileEnd() {
+        if (!stackWhileStart.isEmpty()) {
+            // Volver al inicio del while
+            String[] condicion = stackWhileConditions.peek();
+            String variable = condicion[1];
+            String operador = condicion[2];
+            int limite = Integer.parseInt(condicion[3]);
+
+            int valorActual = variables.getOrDefault(variable, 0);
+            boolean cumple = false;
+
+            switch (operador) {
+                case "<": cumple = valorActual < limite; break;
+            }
+
+            if (cumple) {
+                indiceComandoc = stackWhileStart.peek() - 1; // -1 porque luego se incrementa
+            } else {
+                stackWhileStart.pop();
+                stackWhileConditions.pop();
+            }
+        } else {
+            System.out.println("Error: while_end sin while_begin correspondiente");
+        }
+    }
+
+    private void procesarIncremento(String[] partes) {
+        if (partes.length < 2) {
+            System.out.println("Comando 'incrementar' incompleto");
+            return;
+        }
+        String variable = partes[1];
+        int valorActual = variables.getOrDefault(variable, 0);
+        variables.put(variable, valorActual + 1);
     }
 
 
@@ -591,7 +741,8 @@ private void procesarComandoSinNombre(String comando) {
             @Override
             public void handle(long tiempoActual) {
                 double t = (tiempoActual - tiempoInicio[0]) / 1_000_000_000.0;
-                if ((int) t % 5 == 1) {
+                if ((int) t % 2 == 0) {
+//                  original es 5 == 1
                     tiempoInicio[0] = System.nanoTime();
                     lecturaComando();
                 }

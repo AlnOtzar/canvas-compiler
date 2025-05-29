@@ -43,11 +43,17 @@ import java.util.LinkedList;
 "linea"                  { return symbol(sym.Ln, yytext()); }
 "circulo"                { return symbol(sym.Cir, yytext()); }
 
-// "mover"                  { return symbol(sym.mv, yytext()); }
-// "arriba"                 { return symbol(sym.arri, yytext()); }
-// "abajo"                  { return symbol(sym.aba, yytext()); }
-// "derecha"                { return symbol(sym.der, yytext()); }
-// "izquierda"              { return symbol(sym.izq, yytext()); }
+// mover
+"mover"                  { return symbol(sym.Mv, yytext()); }
+"arriba"                 { return symbol(sym.Arriba, yytext()); }
+"abajo"                  { return symbol(sym.Abajo, yytext()); }
+"derecha"                { return symbol(sym.Derecha, yytext()); }
+"izquierda"              { return symbol(sym.Izquierda, yytext()); }
+
+// while
+"mientras"               { return symbol(sym.While, yytext()); }
+"++"                     { return symbol(sym.INCREMENTO, yytext()); }
+
 
 // Símbolos
 ","                 { return symbol(sym.COMA, yytext()); }
@@ -72,6 +78,9 @@ import java.util.LinkedList;
 
 // Números
 [0-9]+              { return symbol(sym.NUM, Integer.parseInt(yytext())); }
+
+// Operadores de comparación PARA WHILE
+"<"                      { return symbol(sym.MENOR_QUE, yytext()); }
 
 // Fin de línea
 [\n]+               { /* Ignorar líneas vacías */ }

@@ -54,12 +54,15 @@ terminal String C, ID;
 terminal Integer NUM;
 terminal
     Lpr, F, Ps, Rec, Ln, Cir,
-    IGUAL, COMA, PUNTOCOMA, PAR_ABRE, PAR_CIERRA, LLAVE_CIERRA,
-    LLAVE_ABRE;
-//    mv, arriba, abajo, derecha, izquierda;
+    IGUAL, COMA, PUNTOCOMA, PAR_ABRE, PAR_CIERRA, LLAVE_CIERRA, LLAVE_ABRE,
+
+    Mv, While, Arriba, Abajo, Derecha, Izquierda, INCREMENTO,
+    MENOR_QUE, MIENTRAS, CONTADOR;
+
 
 non terminal programa, instrucciones, instruccion, encabezado,
-             encabezados, figuras, figura;
+             encabezados, figuras, figura, mover, animacion, direccion, comparador,
+             bloque;
 
 
 start with programa;
@@ -79,6 +82,9 @@ instruccion ::=
         {: errorRecuperado = true;
                            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 1);
                            registrarError(sym, "Falta el identificador de instrucción (limpiar)");:}
+
+    | animacion
+
     | Lpr error
             {: errorRecuperado = true;
                                Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top - 2 + 2);
@@ -222,7 +228,9 @@ encabezado ::=
     |IGUAL PAR_ABRE NUM COMA NUM PAR_CIERRA LLAVE_ABRE
         {: errorRecuperado = true;
            Symbol sym = (Symbol) CUP$parser$stack.elementAt(CUP$parser$top);
-           registrarError(sym, "Falta la figura antes de cerrar con '}'"); :};
+           registrarError(sym, "Falta la figura antes de cerrar con '}'");
+
+           :};
 
 
 figuras ::= figura
@@ -282,4 +290,43 @@ figura ::=
             ComandoGlobal.ultimaPosicionY + "," +
             x2 + "," + y2 + "," + color);
     :};
+
+//------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------
+
+direccion ::= Arriba:dir {: RESULT = "arriba"; :}
+            | Abajo:dir {: RESULT = "abajo"; :}
+            | Derecha:dir {: RESULT = "derecha"; :}
+            | Izquierda:dir {: RESULT = "izquierda"; :};
+
+bloque ::=
+    LLAVE_ABRE Mv CONTADOR INCREMENTO PUNTOCOMA LLAVE_CIERRA PUNTOCOMA
+    {:
+
+    :};
+
+animacion ::=
+//    mientras (condicion) { bloque };
+    MIENTRAS PAR_ABRE CONTADOR MENOR_QUE NUM:limite PAR_CIERRA
+    {:
+        String cond = var + ",<," + limite;
+        ComandoGlobal.comandos.add("while_begin," + cond);
+    :}  bloque
+
+    | MIENTRAS error
+        {:
+            registrarError((Symbol)CUP$parser$stack.elementAt(CUP$top-1), "Error en estructura while");
+        :};
+
+mover ::= Mv PAR_ABRE ID:fig COMA direccion:dir COMA NUM:cant PAR_CIERRA PUNTOCOMA
+          {:
+              ComandoGlobal.comandos.add("mv," + fig + "," + dir + "," + cant);
+          :}
+    | Mv error
+        {: registrarError((Symbol)CUP$parser$stack.elementAt(CUP$top-1), "Error en comando mover"); :}
+    | Mv PAR_ABRE error
+        {: registrarError((Symbol)CUP$parser$stack.elementAt(CUP$top-1), "Error en parámetros de mover"); :};
+//------------------------------------------------------------------------------------
+
 
